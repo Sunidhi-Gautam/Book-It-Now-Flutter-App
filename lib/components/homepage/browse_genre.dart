@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../models/constants.dart';
-import '../../../api_services/tmdb_api.dart';
 import '../../screens/genre_movies_scree.dart';
 
 

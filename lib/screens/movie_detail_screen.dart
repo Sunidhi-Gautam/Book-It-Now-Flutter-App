@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../api_services/tmdb_api.dart';
 import '../models/movie_detail_model.dart';
+import 'select_location_screen.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int movieId;
@@ -23,10 +24,14 @@ class MovieDetailScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text("Booking feature coming soon!")),
-            );
-          },
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const SelectLocationScreen(
+          ),
+        ),
+      );
+    },
           child: const Text(
             "Book Tickets",
             style: TextStyle(fontSize: 20, color: Colors.white),
@@ -38,7 +43,7 @@ class MovieDetailScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: LoadingAnimationWidget.waveDots(
-              color: Color.fromARGB(158, 93, 18, 18),
+              color: const Color.fromARGB(158, 93, 18, 18),
               size: 50, // Adjust size if needed
             ),);
           } else if (snapshot.hasError) {
@@ -64,7 +69,7 @@ class MovieDetailScreen extends StatelessWidget {
 
                 // Movie Title below banner
                 Padding(
-                  padding: const EdgeInsets.all(12.0),
+                  padding: const EdgeInsets.all(15.0),
                   child: Text(
                     movie.title,
                     style: const TextStyle(

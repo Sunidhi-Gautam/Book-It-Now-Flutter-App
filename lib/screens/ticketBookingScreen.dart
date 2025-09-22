@@ -1,6 +1,7 @@
 // ignore_for_file: file_names
 
-import '../components/ticketbooking/cinemalisting.dart';
+import 'package:bookmyshowclone/screens/homepage.dart';
+
 import '../components/ticketbooking/showTiming.dart';
 import '../models/constants.dart';
 import 'package:flutter/material.dart';
@@ -30,7 +31,7 @@ class _TicketbookingscreenState extends State<Ticketbookingscreen> {
         child: Column(
           children: [
             Showtiming(movieIndex: widget.movieIndex,),
-            const CinemaTimings()
+            const HomePageScreen()
           ],
         ),
       )

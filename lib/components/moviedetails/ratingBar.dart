@@ -1,6 +1,5 @@
 import '../../models/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 
 class RatingBarDetails extends StatefulWidget {
   const RatingBarDetails({super.key, required this.ratingIndex});
@@ -29,8 +28,8 @@ class _RatingBarDetailsState extends State<RatingBarDetails> {
           const SizedBox(width: 10,),
           Icon(Icons.star_rate_rounded, color: kPrimary, size: 30,),
           const SizedBox(width: 2,),
-          Text(ratingAcquired+"/5 ", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: textSubTitle),),
-          Text("("+voteCount+" votes)", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: 10),),
+          Text("$ratingAcquired/5 ", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: textSubTitle),),
+          Text("($voteCount votes)", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: 10),),
           const Spacer(),
           Container(
             height: 20,
