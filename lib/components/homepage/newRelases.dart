@@ -1,126 +1,129 @@
-// ignore_for_file: file_names
-
-import '../../models/constants.dart';
-import '../../screens/moviedetails.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import '../../api_services/tmdb_api.dart';
+import '../../models/movie_model.dart';
+import '../../screens/new_releases_screen.dart';
 
-class Newrelases extends StatefulWidget {
-  const Newrelases({super.key});
+class NewReleases extends StatefulWidget {
+  const NewReleases({super.key});
 
   @override
-  State<Newrelases> createState() => _NewrelasesState();
+  State<NewReleases> createState() => _NewReleasesState();
 }
 
-class _NewrelasesState extends State<Newrelases> {
+class _NewReleasesState extends State<NewReleases> {
+  late Future<List<Movie>> futureMovies;
 
+  @override
+  void initState() {
+    super.initState();
+    futureMovies = ApiService().fetchNowPlayingMovies();
+  }
 
   @override
   Widget build(BuildContext context) {
-    double widthSize= MediaQuery.of(context).size.width;
+    double widthSize = MediaQuery.of(context).size.width;
+
     return SizedBox(
       width: widthSize,
-      height: 260,
+      height: 320,
       child: Padding(
-        padding: const EdgeInsets.only(left: 10.0, right: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
-                Text('New Releases', style: TextStyle(color: darkColor, fontSize: textContent, fontFamily: primaryFont),),
+                const Text("New Releases",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const Spacer(),
-                Text('View all', style: TextStyle(color: kPrimary, fontSize: 12, fontFamily: primaryFont, fontWeight: FontWeight.bold),),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NewReleasesScreen()),
+                    );
+                  },
+                  child: const Text("View All"),
+                ),
               ],
             ),
-            const SizedBox(height: 10,),
+            const SizedBox(height: 10),
             Expanded(
-              child: ListView.builder(
-                itemCount: movieData.length,
-                  scrollDirection: Axis.horizontal,
-                  itemBuilder: (_, index){
-                  final movie=movieData[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(right: 10.0),
-                      child: GestureDetector(
-                        onTap:(){
-                          print(index);
-                          Navigator.push(context, MaterialPageRoute(builder: (builder)=>MovieDetails(movieIndex: index,)));
-                        },
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                movie['imageUrl'],
-                                height: 220,
-                                width: 150,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Container(
-                              height: 220,
-                              width: 150,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(
-                                      colors: [
-                                        Colors.transparent,
-                                        Colors.black.withOpacity(0.2),
-                                        Colors.black.withOpacity(0.4),
-                                        Colors.black.withOpacity(0.6),
-                                        Colors.black,
-                                      ],
-                                      end: Alignment.bottomCenter,
-                                      begin: Alignment.topCenter
-                                  )
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 44,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: SizedBox(
-                                  width: 110,
-                                  child: Text(movie['title'], style: TextStyle(
-                                      color: Colors.white,
-                                      fontFamily: primaryFont,
-                                      fontSize: 12
-                                  ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Positioned(
-                              bottom: 20,
-                              child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    RatingBarIndicator(
-                                      itemBuilder: (context, index) => const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                      itemCount: 5,
-                                      rating: movie['rating'],
-                                      itemSize: 15,
+              child: FutureBuilder<List<Movie>>(
+                future: futureMovies,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text("No movies found"));
+                  }
 
-                                    ),
-                                    const SizedBox(width: 26,),
-                                    Text(movie['ratingCount'], style: TextStyle(color: Colors.white, fontSize: 12, fontFamily: primaryFont),)
-                                  ],
+                  final movies = snapshot.data!;
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: movies.length,
+                    itemBuilder: (_, index) {
+                      final movie = movies[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10.0),
+                        child: SizedBox(
+                          width: 150,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Poster
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                                  height: 180,
+                                  width: 150,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            )
-                          ],
+                              const SizedBox(height: 5),
+                              // Title
+                              Text(
+                                movie.title,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              // Rating
+                              Row(
+                                children: [
+                                  RatingBarIndicator(
+                                    rating: movie.rating / 2,
+                                    itemBuilder: (_, __) => const Icon(
+                                        Icons.star, color: Colors.amber),
+                                    itemSize: 15,
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    movie.rating.toStringAsFixed(1),
+                                    style: const TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  }),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
           ],
         ),

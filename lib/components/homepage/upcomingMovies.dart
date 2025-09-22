@@ -1,0 +1,98 @@
+import 'package:flutter/material.dart';
+import '../../api_services/tmdb_api.dart';
+import '../../models/movie_model.dart';
+import '../../models/constants.dart';
+
+class UpcomingMovies extends StatefulWidget {
+  const UpcomingMovies({super.key});
+
+  @override
+  State<UpcomingMovies> createState() => _UpcomingMoviesState();
+}
+
+class _UpcomingMoviesState extends State<UpcomingMovies> {
+  late Future<List<Movie>> upcomingMovies;
+
+  @override
+  void initState() {
+    super.initState();
+    upcomingMovies = ApiService().fetchUpcomingMovies();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 260, // slightly taller for long names
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Upcoming Movies",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 10),
+            Expanded(
+              child: FutureBuilder<List<Movie>>(
+                future: upcomingMovies,
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("Error: ${snapshot.error}"));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return const Center(child: Text("No upcoming movies found"));
+                  }
+
+                  final movies = snapshot.data!;
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: movies.length,
+                    itemBuilder: (_, index) {
+                      final movie = movies[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                                height: 180,
+                                width: 120,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Container(
+                              width: 120,
+                              child: Text(
+                                movie.title,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                                // allow wrapping
+                                softWrap: true,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

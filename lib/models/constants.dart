@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 //Colors
 
-Color kPrimary= const Color(0xFFE7384D);
+Color kPrimary= const Color.fromARGB(255, 109, 13, 24);
 Color grey= const Color(0xFF2C2B2B);
 Color darkColor= const Color(0xFF040404);
 Color lightColor= const Color(0xFFFFFFFF);
@@ -292,4 +292,16 @@ List<Map<String, dynamic>> seatOptions = [
   },
 
 
+];
+
+// Genre List 
+List<Map<String, dynamic>> genres = [
+  {"id": 28, "name": "Action"},
+  {"id": 35, "name": "Comedy"},
+  {"id": 18, "name": "Drama"},
+  {"id": 27, "name": "Horror"},
+  {"id": 10749, "name": "Romance"},
+  {"id": 14, "name": "Fantasy"},
+  {"id": 878, "name": "Sci-Fi"},
+  {"id": 16, "name": "Animation"},
 ];
