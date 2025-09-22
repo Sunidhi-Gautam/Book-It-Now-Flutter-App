@@ -39,15 +39,14 @@ class _NewReleasesState extends State<NewReleases> {
                         TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                 const Spacer(),
                 TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const NewReleasesScreen()),
-                    );
-                  },
-                  child: const Text("View All"),
-                ),
+                   onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const NewReleasesScreen()),
+    );
+  },
+  child: const Text("View All"),
+),
               ],
             ),
             const SizedBox(height: 10),

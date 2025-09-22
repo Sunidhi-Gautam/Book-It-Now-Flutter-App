@@ -4,7 +4,6 @@ import 'package:iconsax/iconsax.dart';
 
 import '../components/homepage/browse_genre.dart';
 import '../components/homepage/newRelases.dart';
-import '../components/homepage/premierMovies.dart';
 import '../components/homepage/topCarousel.dart';
 import '../components/homepage/upcomingMovies.dart';
 import '../models/constants.dart';
