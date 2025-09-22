@@ -1,5 +1,6 @@
 import 'package:bookmyshowclone/models/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../api_services/tmdb_api.dart';
 import '../models/movie_detail_model.dart';
 
@@ -12,13 +13,14 @@ class MovieDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const Text("Movie Details")),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(50.0),
+        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 45),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: kPrimary,
-            padding: const EdgeInsets.symmetric(vertical: 15,),
+            padding: const EdgeInsets.symmetric(vertical: 15),
             shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10)),
+              borderRadius: BorderRadius.circular(10),
+            ),
           ),
           onPressed: () {
             ScaffoldMessenger.of(context).showSnackBar(
@@ -27,7 +29,7 @@ class MovieDetailScreen extends StatelessWidget {
           },
           child: const Text(
             "Book Tickets",
-            style: TextStyle(fontSize: 18, color: Colors.white),
+            style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),
       ),
@@ -35,7 +37,10 @@ class MovieDetailScreen extends StatelessWidget {
         future: ApiService().fetchMovieDetails(movieId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: LoadingAnimationWidget.waveDots(
+              color: Color.fromARGB(158, 93, 18, 18),
+              size: 50, // Adjust size if needed
+            ),);
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData) {
@@ -50,30 +55,24 @@ class MovieDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Banner
-                Stack(
-                  children: [
-                    Image.network(
-                      "https://image.tmdb.org/t/p/w500${movie.backdropPath}",
-                      height: 200,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                    ),
-                    Positioned(
-                      bottom: 10,
-                      left: 10,
-                      child: Text(
-                        movie.title,
-                        style: const TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                          shadows: [Shadow(blurRadius: 5, color: Colors.black)],
-                        ),
-                      ),
-                    ),
-                  ],
+                Image.network(
+                  "https://image.tmdb.org/t/p/w500${movie.backdropPath}",
+                  height: 200,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
                 ),
-                const SizedBox(height: 10),
+
+                // Movie Title below banner
+                Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Text(
+                    movie.title,
+                    style: const TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
 
                 // Rating
                 Padding(
@@ -89,6 +88,8 @@ class MovieDetailScreen extends StatelessWidget {
                     ],
                   ),
                 ),
+
+                const SizedBox(height: 10),
 
                 // Overview
                 Padding(

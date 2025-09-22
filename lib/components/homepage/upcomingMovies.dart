@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../api_services/tmdb_api.dart';
 import '../../models/movie_model.dart';
-import '../../models/constants.dart';
 
 class UpcomingMovies extends StatefulWidget {
   const UpcomingMovies({super.key});
@@ -22,9 +21,9 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 260, // slightly taller for long names
+      height: 300, // slightly taller for long names
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -51,6 +50,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                   final movies = snapshot.data!;
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.only(bottom: 20), // bottom padding
                     itemCount: movies.length,
                     itemBuilder: (_, index) {
                       final movie = movies[index];
@@ -63,13 +63,13 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
                                 "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                                height: 180,
+                                height: 170,
                                 width: 120,
                                 fit: BoxFit.cover,
                               ),
                             ),
                             const SizedBox(height: 5),
-                            Container(
+                            SizedBox(
                               width: 120,
                               child: Text(
                                 movie.title,
@@ -78,8 +78,9 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
                                 ),
-                                // allow wrapping
                                 softWrap: true,
+                                maxLines: 2, // limits to 2 lines
+                                overflow: TextOverflow.ellipsis,
                               ),
                             ),
                           ],

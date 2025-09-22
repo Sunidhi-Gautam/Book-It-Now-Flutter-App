@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
 import '../../models/movie_model.dart';
 import '../../models/constants.dart';
+import '../screens/movie_detail_screen.dart';
 
 class GenreMoviesScreen extends StatefulWidget {
   final int genreId;
@@ -30,18 +32,27 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.genreName,
-        style: const TextStyle(
-      color: Colors.white, // Title color white
-      fontWeight: FontWeight.bold,
-      fontSize: 18,),),
+        title: Text(
+          widget.genreName,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
+        ),
         backgroundColor: kPrimary,
+        iconTheme: const IconThemeData(
+    color: Color.fromARGB(253, 239, 225, 225), // change the back button color
+  ),
       ),
       body: FutureBuilder<List<Movie>>(
         future: genreMovies,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: LoadingAnimationWidget.waveDots(
+              color: const Color.fromARGB(158, 255, 255, 255),
+              size: 50, // Adjust size if needed
+            ),);
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -60,30 +71,40 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
             itemCount: movies.length,
             itemBuilder: (context, index) {
               final movie = movies[index];
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.network(
-                        "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                        fit: BoxFit.cover,
-                        width: double.infinity,
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => MovieDetailScreen(movieId: movie.id),
+                    ),
+                  );
+                },
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    movie.title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.bold,
+                    const SizedBox(height: 4),
+                    Text(
+                      movie.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             },
           );
