@@ -1,14 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_windowmanager/flutter_windowmanager.dart'; // 👈 added
 
-import 'splash.dart';
+import 'screens/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-await Firebase.initializeApp(
-  options: DefaultFirebaseOptions.currentPlatform,
-);
+
+  // ✅ Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // ✅ Allow screenshots globally
+  await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
+
   runApp(const MyApp());
 }
 
@@ -27,4 +34,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

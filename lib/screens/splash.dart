@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bookmyshowclone/screens/siginPage.dart';
 import 'package:flutter/material.dart';
-import '../models/constants.dart';
+import '../../models/constants.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 

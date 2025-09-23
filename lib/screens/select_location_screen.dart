@@ -6,7 +6,14 @@ import '../models/constants.dart';
 import 'cinema_list_screen.dart';
 
 class SelectLocationScreen extends StatelessWidget {
-  const SelectLocationScreen({super.key});
+  final int movieId; // receive movieId from previous screen
+  final String movieTitle; // receive movieTitle from previous screen
+
+  const SelectLocationScreen({
+    super.key,
+    required this.movieId,
+    required this.movieTitle,
+  });
 
   final List<Map<String, dynamic>> cities = const [
     {'name': 'Delhi', 'lat': 28.6139, 'lng': 77.2090},
@@ -55,7 +62,7 @@ class SelectLocationScreen extends StatelessWidget {
         'location': location,
       };
     })
-        // ✅ Only keep cinemas with at least one location field
+        // Only keep cinemas with at least one location field
         .where((c) => c['location'] != null && c['location']!.isNotEmpty)
         .toList();
 
@@ -111,12 +118,15 @@ class SelectLocationScreen extends StatelessWidget {
                 );
                 Navigator.pop(context); // close loading dialog
 
+                // Pass movieId and movieTitle to CinemaListScreen
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => CinemaListScreen(
                       cityName: city['name'],
                       cinemas: cinemas,
+                      movieId: movieId,
+                      movieTitle: movieTitle,
                     ),
                   ),
                 );

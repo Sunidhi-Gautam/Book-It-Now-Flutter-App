@@ -13,39 +13,62 @@ class MovieDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Movie Details")),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 45),
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: kPrimary,
-            padding: const EdgeInsets.symmetric(vertical: 15),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+      
+      // Bottom Buy Ticket button
+      bottomNavigationBar: FutureBuilder<MovieDetail>(
+        future: ApiService().fetchMovieDetails(movieId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox(
+              height: 40,
+              child: Center(child: CircularProgressIndicator(color: Colors.white,)),
+            );
+          } else if (snapshot.hasError || !snapshot.hasData) {
+            return const SizedBox(height: 50);
+          }
+
+          final movie = snapshot.data!;
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 45),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: kPrimary,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => SelectLocationScreen(
+                      movieId: movieId,
+                      movieTitle: movie.title,
+                    ),
+                  ),
+                );
+              },
+              child: const Text(
+                "Proceed",
+                style: TextStyle(fontSize: 20, color: Colors.white),
+              ),
             ),
-          ),
-          onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const SelectLocationScreen(
-          ),
-        ),
-      );
-    },
-          child: const Text(
-            "Buy Ticket",
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-        ),
+          );
+        },
       ),
+
+      // Movie Detail Body
       body: FutureBuilder<MovieDetail>(
         future: ApiService().fetchMovieDetails(movieId),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingAnimationWidget.waveDots(
-              color: const Color.fromARGB(158, 93, 18, 18),
-              size: 50, // Adjust size if needed
-            ),);
+            return Center(
+              child: LoadingAnimationWidget.waveDots(
+                color: const Color.fromARGB(158, 93, 18, 18),
+                size: 50,
+              ),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData) {
@@ -55,11 +78,11 @@ class MovieDetailScreen extends StatelessWidget {
           final movie = snapshot.data!;
 
           return SingleChildScrollView(
-            padding: const EdgeInsets.only(bottom: 80), // leave space for button
+            padding: const EdgeInsets.only(bottom: 20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Banner
+                // Movie Banner
                 Image.network(
                   "https://image.tmdb.org/t/p/w500${movie.backdropPath}",
                   height: 200,
@@ -67,7 +90,7 @@ class MovieDetailScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
 
-                // Movie Title below banner
+                // Title
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Text(
@@ -105,7 +128,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Cast
+                // Cast Section
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
@@ -149,8 +172,10 @@ class MovieDetailScreen extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style:
-                                  const TextStyle(fontSize: 10, color: Colors.grey),
+                              style: const TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey,
+                              ),
                             ),
                           ],
                         ),
@@ -159,39 +184,54 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Reviews
-                if (movie.reviews.isNotEmpty) ...[
-                  const Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
-                    child: Text(
-                      "Reviews",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
+                // Reviews Section
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
+                  child: Text(
+                    "Reviews",
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  ...movie.reviews.map((review) => Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              review.author,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 14),
-                            ),
-                            const SizedBox(height: 5),
-                            Text(
-                              review.content,
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
+                ),
+                if (movie.reviews.isEmpty)
+                  const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Text("No reviews yet."),
+                  )
+                else
+                  ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(), // To allow inside scroll view
+                    shrinkWrap: true,
+                    itemCount: movie.reviews.length,
+                    itemBuilder: (_, index) {
+                      final review = movie.reviews[index];
+                      return Card(
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
                         ),
-                      )),
-                ],
-
-                const SizedBox(height: 20),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                review.author,
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              Text(
+                                review.content,
+                                maxLines: 4,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
           );
