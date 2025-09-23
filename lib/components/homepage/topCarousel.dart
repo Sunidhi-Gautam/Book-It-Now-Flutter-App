@@ -1,8 +1,12 @@
-
 // ignore_for_file: file_names
 
+import 'package:bookmyshowclone/models/constants.dart';
+import 'package:bookmyshowclone/models/movie_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../../api_services/tmdb_api.dart';
+
 
 class TopCarouselSection extends StatefulWidget {
   const TopCarouselSection({super.key});
@@ -12,56 +16,122 @@ class TopCarouselSection extends StatefulWidget {
 }
 
 class _TopCarouselSectionState extends State<TopCarouselSection> {
+  final ApiService apiService = ApiService();
+  List<Movie> trendingMovies = [];
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchTrendingMovies();
+  }
+
+  void fetchTrendingMovies() async {
+    try {
+      final response = await apiService.fetchTrendingMovies(); 
+      setState(() {
+        trendingMovies = response;
+        isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoading = false;
+      });
+      debugPrint('Failed to fetch trending movies: $e');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> carouselItem=[
-      Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            'https://i.ytimg.com/vi/5tnc_R1I2xA/maxresdefault.jpg',
-            fit: BoxFit.cover,
-            height: 150,
-            width: MediaQuery.of(context).size.width-40,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+          child: Text(
+            "Trending This Month 🔥",
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              fontFamily: secondaryFonts,
+            ),
           ),
         ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            'https://i.ytimg.com/vi/IbYjHUkNwHg/maxresdefault.jpg',
-            fit: BoxFit.cover,
-            height: 150,
-            width: MediaQuery.of(context).size.width-40,
+        if (isLoading)
+           SizedBox(
+            height: 220,
+            child: Center(child: LoadingAnimationWidget.waveDots(
+              color: const Color.fromARGB(158, 255, 255, 255),
+              size: 50, // Adjust size if needed
+            ),),
+          )
+        else if (trendingMovies.isEmpty)
+          const SizedBox(
+            height: 220,
+            child: Center(child: Text("No trending movies found.")),
+          )
+        else
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: FlutterCarousel(
+              items: trendingMovies.map((movie) {
+                final posterUrl = movie.posterPath.isNotEmpty
+                    ? 'https://image.tmdb.org/t/p/w500${movie.posterPath}'
+                    : 'https://via.placeholder.com/500x750?text=No+Image';
+
+                return Padding(
+                  padding: const EdgeInsets.all(6.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Stack(
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 2 / 3,
+                          child: Image.network(
+                            posterUrl,
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 8,
+                          right: 8,
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(0.7),
+                              borderRadius: BorderRadius.circular(6),
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.star, color: Colors.yellow, size: 16),
+                                const SizedBox(width: 4),
+                                Text(
+                                  movie.rating.toStringAsFixed(1),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+              options: FlutterCarouselOptions(
+                height: 220,
+                enableInfiniteScroll: true,
+                viewportFraction: 0.45,
+                autoPlay: true,
+                showIndicator: false,
+              ),
+            ),
           ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(6.0),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Image.network(
-            'https://i.ytimg.com/vi/kiIoydThaWo/maxresdefault.jpg',
-            fit: BoxFit.cover,
-            height: 150,
-            width: MediaQuery.of(context).size.width-40,
-          ),
-        ),
-      ),
-    ];
-    return FlutterCarousel(
-      items: carouselItem,
-      options: FlutterCarouselOptions(
-        height: 200,
-        enableInfiniteScroll: true,
-        viewportFraction: 0.8,
-        autoPlay: true,
-        showIndicator: false,
-      ),
+      ],
     );
   }
 }
