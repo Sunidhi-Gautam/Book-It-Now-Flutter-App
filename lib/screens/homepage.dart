@@ -7,6 +7,8 @@ import '../components/homepage/newRelases.dart';
 import '../components/homepage/topCarousel.dart';
 import '../components/homepage/upcomingMovies.dart';
 import '../models/constants.dart';
+import 'siginPage.dart';
+import 'showTicket.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -46,9 +48,17 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: const AppDrawer(),
       appBar: AppBar(
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
+        // custom leading icon to open the drawer
+        leading: Builder(
+        builder: (context) => IconButton(
+          icon: Icon(Iconsax.menu, color: kPrimary),
+          onPressed: () => Scaffold.of(context).openDrawer(),
+        ),
+      ),
         elevation: 0,
         title: Row(
           children: [
@@ -139,6 +149,89 @@ class LocationDialog extends StatelessWidget {
             );
           },
         ),
+      ),
+    );
+  }
+}
+
+
+// drawer feature 
+
+class AppDrawer extends StatelessWidget {
+  const AppDrawer({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: lightColor, // <-- Using your lightColor
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          UserAccountsDrawerHeader(
+            decoration: BoxDecoration(
+              color: kPrimary, // <-- Using your kPrimary color
+            ),
+            accountName: Text(
+              "Your Name",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: primaryFont,
+                color: lightColor, // <-- Using your lightColor for text
+              ),
+            ),
+            accountEmail: Text(
+              "your.email@example.com",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontFamily: subtitleFonts,
+                color: lightColor, // <-- Using your lightColor for text
+              ),
+            ),
+            currentAccountPicture: CircleAvatar(
+              backgroundColor: lightColor, // <-- Using your lightColor for avatar background
+              child: Icon(
+                Iconsax.user,
+                color: kPrimary, // <-- Using your kPrimary for the icon
+                size: 40,
+              ),
+            ),
+          ),
+          
+          // ListTile for Booked Tickets
+          ListTile(
+            leading: Icon(Iconsax.ticket, color: darkColor),
+            title: Text('My Bookings',
+            style: TextStyle(fontFamily: primaryFont, color: darkColor),
+           ),
+           onTap: () {
+            // First, close the drawer
+             Navigator.pop(context);
+    // Then, navigate to the ShowTicket screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ShowTicket()),
+    );
+  },
+),
+          const Divider(),
+          
+          // ListTile for Logout
+           ListTile(
+            leading: Icon(Iconsax.logout, color: kPrimary),
+            title: Text(
+              'Logout',
+              style: TextStyle(fontFamily: primaryFont, color: kPrimary),
+              ),
+              onTap: () {
+// Navigate to the SigninPage and remove all previous screens from history
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const SigninPage()),
+                (Route<dynamic> route) => false,
+                 );
+              },
+          ),
+        ],
       ),
     );
   }
