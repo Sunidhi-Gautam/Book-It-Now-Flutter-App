@@ -47,7 +47,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color.fromARGB(255, 96, 4, 4),
         automaticallyImplyLeading: false,
         elevation: 0,
         title: Row(
@@ -56,9 +56,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "It's All Starts Here",
+                  "Movies, Just for You",
                   style: TextStyle(
-                    color: darkColor,
+                    color: Colors.white,
                     fontFamily: primaryFont,
                     fontSize: textContent,
                   ),
@@ -70,8 +70,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       Text(
                         _selectedLocation,
                         style: TextStyle(
-                          color: darkColor,
-                          fontFamily: subtitleFonts,
+                          color: const Color.fromARGB(255, 248, 179, 174),
+                          fontFamily: secondaryFonts,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
@@ -79,7 +79,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       const Icon(
                         Icons.arrow_drop_down,
                         size: 18,
-                        color: Colors.black,
+                        color: Color.fromARGB(255, 252, 235, 235),
                       ),
                     ],
                   ),
@@ -121,7 +121,7 @@ class LocationDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locations = ['Mumbai', 'Delhi', 'Bangalore', 'Chennai', 'Kolkata'];
+    final locations = ['Mumbai', 'Delhi', 'Chennai', 'Kolkata'];
 
     return AlertDialog(
       title: const Text('Select Location'),

@@ -33,7 +33,7 @@ class MovieDetailScreen extends StatelessWidget {
       );
     },
           child: const Text(
-            "Book Tickets",
+            "Buy Ticket",
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         ),

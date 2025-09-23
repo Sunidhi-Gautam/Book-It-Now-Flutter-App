@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
 import '../../models/movie_model.dart';
 import 'movie_detail_screen.dart';
@@ -27,7 +28,10 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
         future: futureMovies,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            return Center(child: LoadingAnimationWidget.waveDots(
+              color: const Color.fromARGB(158, 255, 255, 255),
+              size: 50, // Adjust size if needed
+            ),);
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {

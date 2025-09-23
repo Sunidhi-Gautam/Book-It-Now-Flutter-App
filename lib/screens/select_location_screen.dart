@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dart:convert';
 import '../models/constants.dart';
 import 'cinema_list_screen.dart';
@@ -14,8 +15,8 @@ class SelectLocationScreen extends StatelessWidget {
     {'name': 'Kolkata', 'lat': 22.5726, 'lng': 88.3639},
   ];
 
-  Future<List<Map<String, String>>> fetchCinemas(double lat, double lng) async {
-    // Overpass API query: get cinemas (theatre) around location
+  Future<List<Map<String, String>>> fetchCinemas(
+      double lat, double lng, String cityName) async {
     final query = '''
       [out:json][timeout:25];
       (
@@ -26,7 +27,8 @@ class SelectLocationScreen extends StatelessWidget {
       out center;
     ''';
 
-    final url = Uri.parse('https://overpass-api.de/api/interpreter?data=${Uri.encodeComponent(query)}');
+    final url = Uri.parse(
+        'https://overpass-api.de/api/interpreter?data=${Uri.encodeComponent(query)}');
     final response = await http.get(url);
 
     if (response.statusCode != 200) return [];
@@ -34,16 +36,28 @@ class SelectLocationScreen extends StatelessWidget {
     final data = json.decode(response.body);
     final elements = data['elements'] as List<dynamic>;
 
-    // Filter and map to List<Map<String, String>>
     final cinemas = elements
         .where((e) => e['tags'] != null && e['tags']['name'] != null)
         .map<Map<String, String>>((e) {
       final tags = e['tags'] as Map<String, dynamic>;
+
+      // Collect all possible address parts
+      List<String> parts = [];
+      if (tags['addr:street'] != null) parts.add(tags['addr:street']);
+      if (tags['addr:suburb'] != null) parts.add(tags['addr:suburb']);
+      if (tags['addr:district'] != null) parts.add(tags['addr:district']);
+      if (tags['addr:city'] != null) parts.add(tags['addr:city']);
+
+      final location = parts.join(", "); // Combine available parts
+
       return {
         'name': tags['name'].toString(),
-        'location': (tags['addr:street'] ?? 'Unknown').toString(),
+        'location': location,
       };
-    }).toList();
+    })
+        // ✅ Only keep cinemas with at least one location field
+        .where((c) => c['location'] != null && c['location']!.isNotEmpty)
+        .toList();
 
     return cinemas;
   }
@@ -82,10 +96,19 @@ class SelectLocationScreen extends StatelessWidget {
                 showDialog(
                   context: context,
                   barrierDismissible: false,
-                  builder: (_) => const Center(child: CircularProgressIndicator()),
+                  builder: (_) => Center(
+                    child: LoadingAnimationWidget.waveDots(
+                      color: Colors.white,
+                      size: 50,
+                    ),
+                  ),
                 );
 
-                final cinemas = await fetchCinemas(city['lat'], city['lng']);
+                final cinemas = await fetchCinemas(
+                  city['lat'],
+                  city['lng'],
+                  city['name'],
+                );
                 Navigator.pop(context); // close loading dialog
 
                 Navigator.push(

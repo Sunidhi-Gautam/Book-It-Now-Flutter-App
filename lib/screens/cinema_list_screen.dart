@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import '../models/constants.dart';
-import 'seatSelections.dart';
-
-
 
 class CinemaListScreen extends StatelessWidget {
   final String cityName;
@@ -18,47 +15,56 @@ class CinemaListScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Cinemas in $cityName", style: const TextStyle(color: Colors.white)),
         backgroundColor: kPrimary,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          "$cityName Cinemas",
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontFamily: secondaryFonts,
+          ),
+        ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: cinemas.isEmpty
-            ? const Center(child: Text("No cinemas found"))
-            : ListView.separated(
-                itemCount: cinemas.length,
-                separatorBuilder: (_, __) => const SizedBox(height: 12),
-                itemBuilder: (context, index) {
-                  final cinema = cinemas[index];
-                  return ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      foregroundColor: kPrimary,
-                      side: BorderSide(color: kPrimary, width: 2),
-                      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const Seatselections(movieId: 1 , movieTitle: '',
-                          ),
-                        ),
-                      );
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(cinema['name']!, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                        const SizedBox(height: 4),
-                        Text(cinema['location']!, style: const TextStyle(fontSize: 14)),
-                      ],
-                    ),
-                  );
-                },
+      backgroundColor: Colors.white,
+      body: cinemas.isEmpty
+          ? const Center(
+              child: Text(
+                "No cinemas with valid locations found.",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
-      ),
+            )
+          : ListView.builder(
+              itemCount: cinemas.length,
+              itemBuilder: (context, index) {
+                final cinema = cinemas[index];
+                return Card(
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 2,
+                  child: ListTile(
+                    leading: const Icon(
+                      Icons.location_on,
+                      color: Colors.red,
+                    ),
+                    title: Text(
+                      cinema['name'] ?? '',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    subtitle: Text(cinema['location'] ?? ''),
+                    onTap: () {
+                      // TODO: handle cinema selection
+                    },
+                  ),
+                );
+              },
+            ),
     );
   }
 }
