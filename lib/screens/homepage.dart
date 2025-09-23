@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../components/homepage/browse_genre.dart';
 import '../components/homepage/newRelases.dart';
@@ -52,13 +53,16 @@ class _HomePageScreenState extends State<HomePageScreen> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 96, 4, 4),
         automaticallyImplyLeading: false,
-        // custom leading icon to open the drawer
         leading: Builder(
-        builder: (context) => IconButton(
-          icon: Icon(Iconsax.menu, color: kPrimary),
-          onPressed: () => Scaffold.of(context).openDrawer(),
+          builder: (context) => GestureDetector(
+            onTap: () => Scaffold.of(context).openDrawer(),
+            child: Container(
+              margin: const EdgeInsets.all(8),
+             
+              child: const Icon(Iconsax.menu_1, color: Color.fromARGB(255, 238, 118, 118), size: 28),
+            ),
+          ),
         ),
-      ),
         elevation: 0,
         title: Row(
           children: [
@@ -154,84 +158,86 @@ class LocationDialog extends StatelessWidget {
   }
 }
 
-
-// drawer feature 
-
+// ------------------------
+// Drawer with Firebase User Info
+// ------------------------
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: lightColor, // <-- Using your lightColor
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(
-              color: kPrimary, // <-- Using your kPrimary color
-            ),
-            accountName: Text(
-              "Your Name",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: primaryFont,
-                color: lightColor, // <-- Using your lightColor for text
+      backgroundColor: lightColor,
+      child: StreamBuilder<User?>(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (context, snapshot) {
+          final user = snapshot.data;
+
+          return ListView(
+            padding: EdgeInsets.zero,
+            children: [
+              UserAccountsDrawerHeader(
+                decoration: BoxDecoration(color: kPrimary),
+                accountName: Text(
+                  user?.displayName ?? 'Your Name',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: primaryFont,
+                    color: lightColor,
+                  ),
+                ),
+                accountEmail: Text(
+                  user?.email ?? 'your.email@example.com',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontFamily: subtitleFonts,
+                    color: lightColor,
+                  ),
+                ),
+                currentAccountPicture: CircleAvatar(
+                  backgroundColor: lightColor,
+                  child: Icon(
+                    Iconsax.user,
+                    color: kPrimary,
+                    size: 40,
+                  ),
+                ),
               ),
-            ),
-            accountEmail: Text(
-              "your.email@example.com",
-              style: TextStyle(
-                fontWeight: FontWeight.w500,
-                fontFamily: subtitleFonts,
-                color: lightColor, // <-- Using your lightColor for text
+
+              ListTile(
+                leading: Icon(Iconsax.ticket, color: darkColor),
+                title: Text(
+                  'My Bookings',
+                  style: TextStyle(fontFamily: primaryFont, color: darkColor),
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const ShowTicket()),
+                  );
+                },
               ),
-            ),
-            currentAccountPicture: CircleAvatar(
-              backgroundColor: lightColor, // <-- Using your lightColor for avatar background
-              child: Icon(
-                Iconsax.user,
-                color: kPrimary, // <-- Using your kPrimary for the icon
-                size: 40,
+              const Divider(),
+
+              ListTile(
+                leading: Icon(Iconsax.logout, color: kPrimary),
+                title: Text(
+                  'Logout',
+                  style: TextStyle(fontFamily: primaryFont, color: kPrimary),
+                ),
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut();
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(builder: (context) => const SigninPage()),
+                    (Route<dynamic> route) => false,
+                  );
+                },
               ),
-            ),
-          ),
-          
-          // ListTile for Booked Tickets
-          ListTile(
-            leading: Icon(Iconsax.ticket, color: darkColor),
-            title: Text('My Bookings',
-            style: TextStyle(fontFamily: primaryFont, color: darkColor),
-           ),
-           onTap: () {
-            // First, close the drawer
-             Navigator.pop(context);
-    // Then, navigate to the ShowTicket screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const ShowTicket()),
-    );
-  },
-),
-          const Divider(),
-          
-          // ListTile for Logout
-           ListTile(
-            leading: Icon(Iconsax.logout, color: kPrimary),
-            title: Text(
-              'Logout',
-              style: TextStyle(fontFamily: primaryFont, color: kPrimary),
-              ),
-              onTap: () {
-// Navigate to the SigninPage and remove all previous screens from history
-              Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const SigninPage()),
-                (Route<dynamic> route) => false,
-                 );
-              },
-          ),
-        ],
+            ],
+          );
+        },
       ),
     );
   }

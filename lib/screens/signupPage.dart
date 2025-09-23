@@ -1,8 +1,8 @@
 // ignore_for_file: file_names
-
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/constants.dart';
-import 'siginPage.dart';  // Import the signin page to navigate back to it
+import 'homepage.dart'; // ⬅️ now importing HomeScreen
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -29,11 +29,56 @@ class _SignUpPageState extends State<SignUpPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-  
-  // You can add your pseudo sign-up logic here later
+
   Future<void> _signUp() async {
-    // TODO: Add sign-up validation and logic
-    print('Signing up...');
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Passwords do not match")),
+      );
+      return;
+    }
+
+    try {
+      setState(() => _isLoading = true);
+
+      // Firebase sign-up
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // Optionally update display name with username
+      await FirebaseAuth.instance.currentUser?.updateDisplayName(
+        _usernameController.text.trim(),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Account created successfully!")),
+      );
+
+      // Navigate to Home screen after sign up
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const HomePageScreen()),
+      );
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'weak-password') {
+        message = "The password is too weak.";
+      } else if (e.code == 'email-already-in-use') {
+        message = "This email is already registered.";
+      } else if (e.code == 'invalid-email') {
+        message = "The email address is not valid.";
+      } else {
+        message = "Sign up failed: ${e.message}";
+      }
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Unexpected error: $e")),
+      );
+    } finally {
+      setState(() => _isLoading = false);
+    }
   }
 
   @override
@@ -48,12 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // 1. App Logo and Welcome Text
-                const Icon(
-                  Icons.theaters,
-                  size: 80,
-                  color: kPrimaryColor,
-                ),
+                const Icon(Icons.theaters, size: 80, color: kPrimaryColor),
                 const SizedBox(height: 20),
                 const Text(
                   'Create Account',
@@ -66,15 +106,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 10),
                 const Text(
                   'Start your movie journey with us',
-                  style: TextStyle(
-                    color: kGreyColor,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: kGreyColor, fontSize: 16),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 50),
 
-                // 2. Username Text Field
+                // Username field
                 TextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
@@ -91,8 +128,8 @@ class _SignUpPageState extends State<SignUpPage> {
                   style: const TextStyle(color: kAccentColor),
                 ),
                 const SizedBox(height: 20),
-                
-                // 3. Email Text Field
+
+                // Email field
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -111,7 +148,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // 4. Password Text Field
+                // Password field
                 TextField(
                   controller: _passwordController,
                   obscureText: _isPasswordObscured,
@@ -125,9 +162,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         color: kGreyColor,
                       ),
                       onPressed: () {
-                        setState(() {
-                          _isPasswordObscured = !_isPasswordObscured;
-                        });
+                        setState(() => _isPasswordObscured = !_isPasswordObscured);
                       },
                     ),
                     filled: true,
@@ -141,7 +176,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // 5. Confirm Password Text Field
+                // Confirm Password field
                 TextField(
                   controller: _confirmPasswordController,
                   obscureText: _isConfirmPasswordObscured,
@@ -149,15 +184,13 @@ class _SignUpPageState extends State<SignUpPage> {
                     hintText: 'Confirm Password',
                     hintStyle: const TextStyle(color: kGreyColor),
                     prefixIcon: const Icon(Icons.lock_clock, color: kGreyColor),
-                     suffixIcon: IconButton(
+                    suffixIcon: IconButton(
                       icon: Icon(
                         _isConfirmPasswordObscured ? Icons.visibility_off : Icons.visibility,
                         color: kGreyColor,
                       ),
                       onPressed: () {
-                        setState(() {
-                          _isConfirmPasswordObscured = !_isConfirmPasswordObscured;
-                        });
+                        setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured);
                       },
                     ),
                     filled: true,
@@ -171,7 +204,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // 6. Sign Up Button
+                // Sign Up Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -197,20 +230,15 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 40),
 
-                // 7. Sign In Link
+                // Sign In Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Already have an account? ",
-                      style: TextStyle(color: kGreyColor),
-                    ),
+                    const Text("Already have an account? ",
+                        style: TextStyle(color: kGreyColor)),
                     GestureDetector(
                       onTap: () {
-                        // Navigate back to the Sign In page
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => const SigninPage()),
-                        );
+                        Navigator.of(context).pop(); // just go back
                       },
                       child: const Text(
                         'Sign In',

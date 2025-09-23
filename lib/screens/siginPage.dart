@@ -1,5 +1,7 @@
 // ignore_for_file: file_names
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../models/constants.dart';
 import 'package:flutter/material.dart';
 import 'homepage.dart';
@@ -13,17 +15,14 @@ class SigninPage extends StatefulWidget {
 }
 
 class _SigninPageState extends State<SigninPage> {
-  // State to toggle password visibility
   bool _isPasswordObscured = true;
   bool _isLoading = false;
 
-  // Controllers to manage the text field's content
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   @override
   void dispose() {
-    // Clean up the controllers when the widget is disposed
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -37,38 +36,67 @@ class _SigninPageState extends State<SigninPage> {
       return;
     }
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    await Future.delayed(const Duration(seconds: 1));
-
     try {
-      const String pseudoEmail = 'test@example.com';
-      const String pseudoPassword = 'password123';
+      setState(() => _isLoading = true);
 
-      if (_emailController.text.trim() == pseudoEmail &&
-          _passwordController.text.trim() == pseudoPassword) {
-        if (mounted) {
-          Navigator.of(context).pushReplacement(
+      // Firebase sign-in
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      if (mounted) {
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomePageScreen()),
-);
-        }
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      String message;
+      if (e.code == 'user-not-found') {
+        message = "No user found for that email.";
+      } else if (e.code == 'wrong-password') {
+        message = "Wrong password provided.";
+      } else if (e.code == 'invalid-email') {
+        message = "Invalid email format.";
       } else {
-        throw Exception('Invalid email or password');
+        message = "Sign in failed: ${e.message}";
+      }
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(message)),
+        );
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to sign in: ${e.toString()}')),
+          SnackBar(content: Text("Unexpected error: $e")),
         );
       }
     } finally {
       if (mounted) {
-        setState(() {
-          _isLoading = false;
-        });
+        setState(() => _isLoading = false);
       }
+    }
+  }
+
+  Future<void> _resetPassword() async {
+    if (_emailController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Enter your email to reset password")),
+      );
+      return;
+    }
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: _emailController.text.trim());
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Password reset email sent")),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to send reset email: $e")),
+      );
     }
   }
 
@@ -84,19 +112,15 @@ class _SigninPageState extends State<SigninPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // 1. App Logo and Welcome Text
-                const Icon(
-                  Icons.theaters, // A movie-themed icon
-                  size: 80,
-                  color: kPrimaryColor,
-                ),
+                const Icon(Icons.theaters, size: 80, color: kPrimaryColor),
                 const SizedBox(height: 20),
-                const Text(
+                Text(
                   'BOOK IT NOW!',
                   style: TextStyle(
                     color: kAccentColor,
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
+                    fontFamily: primaryFont
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -110,7 +134,7 @@ class _SigninPageState extends State<SigninPage> {
                 ),
                 const SizedBox(height: 60),
 
-                // 2. Email Text Field
+                // Email Text Field
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
@@ -121,7 +145,7 @@ class _SigninPageState extends State<SigninPage> {
                     fillColor: kTextFieldFill,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none, // No border
+                      borderSide: BorderSide.none,
                     ),
                   ),
                   keyboardType: TextInputType.emailAddress,
@@ -129,7 +153,7 @@ class _SigninPageState extends State<SigninPage> {
                 ),
                 const SizedBox(height: 20),
 
-                // 3. Password Text Field
+                // Password Text Field
                 TextField(
                   controller: _passwordController,
                   obscureText: _isPasswordObscured,
@@ -139,14 +163,13 @@ class _SigninPageState extends State<SigninPage> {
                     prefixIcon: const Icon(Icons.lock_rounded, color: kGreyColor),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
+                        _isPasswordObscured
+                            ? Icons.visibility_off
+                            : Icons.visibility,
                         color: kGreyColor,
                       ),
                       onPressed: () {
-                        // Toggle the state of password visibility
-                        setState(() {
-                          _isPasswordObscured = !_isPasswordObscured;
-                        });
+                        setState(() => _isPasswordObscured = !_isPasswordObscured);
                       },
                     ),
                     filled: true,
@@ -160,13 +183,11 @@ class _SigninPageState extends State<SigninPage> {
                 ),
                 const SizedBox(height: 15),
 
-                // 4. Forgot Password
+                // Forgot Password
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      // TODO: Implement forgot password functionality
-                    },
+                    onPressed: _resetPassword,
                     child: const Text(
                       'Forgot Password?',
                       style: TextStyle(color: kPrimaryColor),
@@ -175,22 +196,24 @@ class _SigninPageState extends State<SigninPage> {
                 ),
                 const SizedBox(height: 30),
 
-                
-                // 5. Sign In Button
+                // Sign In Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signIn, // Calls your new function
+                    onPressed: _isLoading ? null : _signIn,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: kPrimaryColor,
-                      disabledBackgroundColor: kPrimaryColor.withOpacity(0.5),
+                      disabledBackgroundColor: kPrimaryColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
                     child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white) // Shows loading spinner
+                        ? LoadingAnimationWidget.waveDots(
+                            color: const Color.fromARGB(158, 255, 255, 255),
+                            size: 50,
+                          )
                         : const Text(
                             'Sign In',
                             style: TextStyle(
@@ -202,17 +225,14 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
 
-                // 6. Sign Up Link
+                // Sign Up Link
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text(
-                      "Don't have an account? ",
-                      style: TextStyle(color: kGreyColor),
-                    ),
+                    const Text("Don't have an account? ",
+                        style: TextStyle(color: kGreyColor)),
                     GestureDetector(
                       onTap: () {
-                        // 2. UPDATE THIS FUNCTION
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(builder: (context) => const SignUpPage()),
                         );
