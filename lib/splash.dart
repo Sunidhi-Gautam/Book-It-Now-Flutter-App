@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:bookmyshowclone/screens/siginPage.dart';
 import 'package:flutter/material.dart';
 import '../models/constants.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -23,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (_) => const HomePageScreen()),
+        MaterialPageRoute(builder: (_) => const SigninPage()),
       );
     });
   }
