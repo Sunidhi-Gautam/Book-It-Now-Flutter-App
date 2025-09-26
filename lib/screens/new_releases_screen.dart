@@ -1,3 +1,4 @@
+import 'package:bookmyshowclone/models/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
@@ -5,7 +6,7 @@ import '../../models/movie_model.dart';
 import 'movie_detail_screen.dart';
 
 class NewReleasesScreen extends StatefulWidget {
-  const NewReleasesScreen({Key? key}) : super(key: key);
+  const NewReleasesScreen({super.key});
 
   @override
   State<NewReleasesScreen> createState() => _NewReleasesScreenState();
@@ -23,7 +24,12 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("New Releases")),
+      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
+      appBar: AppBar(
+        title:  Text("New Releases", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: secondaryFonts),),
+        backgroundColor: kPrimaryColor,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
       body: FutureBuilder<List<Movie>>(
         future: futureMovies,
         builder: (context, snapshot) {
@@ -72,16 +78,19 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       movie.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        fontFamily: secondaryFonts,
+                        color: Colors.white
                       ),
                     ),
+                    const SizedBox(height: 10),
                   ],
                 ),
               );

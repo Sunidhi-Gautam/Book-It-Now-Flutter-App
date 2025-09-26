@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 //Colors
 
-Color kPrimary= const Color.fromARGB(255, 98, 3, 3);
+Color kPrimaryColor= const Color.fromARGB(255, 98, 3, 3);
 Color grey= const Color(0xFF2C2B2B);
 Color darkColor= const Color(0xFF040404);
 Color lightColor= const Color(0xFFFFFFFF);
 
 //Colors for signin page
 // App Theme Colors
-const Color kPrimaryColor = Color(0xFF8B0000); // A deep, rich maroon/dark red
+const Color kPrimaryColorColor = Color(0xFF8B0000); // A deep, rich maroon/dark red
 const Color kBackgroundColor = Color(0xFF121212); // A very dark grey for the background
 const Color kTextFieldFill = Color(0xFF1E1E1E); // Slightly lighter grey for text fields
 const Color kAccentColor = Color(0xFFFFFFFF); // White for text and icons

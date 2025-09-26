@@ -54,6 +54,7 @@ class _TopCarouselSectionState extends State<TopCarouselSection> {
               fontSize: 18,
               fontWeight: FontWeight.bold,
               fontFamily: secondaryFonts,
+              color: Colors.white
             ),
           ),
         ),

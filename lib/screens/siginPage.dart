@@ -112,7 +112,7 @@ class _SigninPageState extends State<SigninPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.theaters, size: 80, color: kPrimaryColor),
+                const Icon(Icons.theaters, size: 80, color: kPrimaryColorColor),
                 const SizedBox(height: 20),
                 Text(
                   'BOOK IT NOW!',
@@ -190,7 +190,7 @@ class _SigninPageState extends State<SigninPage> {
                     onPressed: _resetPassword,
                     child: const Text(
                       'Forgot Password?',
-                      style: TextStyle(color: kPrimaryColor),
+                      style: TextStyle(color: kPrimaryColorColor),
                     ),
                   ),
                 ),
@@ -203,8 +203,8 @@ class _SigninPageState extends State<SigninPage> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _signIn,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColor,
-                      disabledBackgroundColor: kPrimaryColor,
+                      backgroundColor: kPrimaryColorColor,
+                      disabledBackgroundColor: kPrimaryColorColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -240,7 +240,7 @@ class _SigninPageState extends State<SigninPage> {
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(
-                          color: kPrimaryColor,
+                          color: kPrimaryColorColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

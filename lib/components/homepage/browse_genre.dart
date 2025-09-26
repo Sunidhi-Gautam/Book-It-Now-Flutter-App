@@ -19,7 +19,7 @@ class BrowseByGenre extends StatelessWidget {
               fontSize: 18,
               fontWeight: FontWeight.bold,
               fontFamily: secondaryFonts,
-              color: darkColor,
+              color: Colors.white,
             ),
           ),
         ),
@@ -54,7 +54,7 @@ class BrowseByGenre extends StatelessWidget {
                       vertical: 15,
                     ),
                     decoration: BoxDecoration(
-                      color: kPrimary,
+                      color: kPrimaryColor,
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: const Color.fromARGB(233, 74, 4, 4)),
                       boxShadow: const [

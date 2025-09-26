@@ -30,7 +30,7 @@ class _TicketbookingscreenState extends State<Ticketbookingscreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Showtiming(movieIndex: widget.movieIndex,),
+            ShowTimingSelector(movieIndex: widget.movieIndex, onDateSelected: (DateTime selectedDate) {  },),
             const HomePageScreen()
           ],
         ),

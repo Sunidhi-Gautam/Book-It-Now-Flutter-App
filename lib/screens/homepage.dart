@@ -48,7 +48,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
       drawer: const AppDrawer(),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 96, 4, 4),
@@ -101,9 +101,9 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ],
             ),
             const Spacer(),
-            Icon(Iconsax.search_normal, color: kPrimary),
+            Icon(Iconsax.search_normal, color: kPrimaryColor),
             const SizedBox(width: 12),
-            Icon(Iconsax.scan_barcode, color: kPrimary),
+            Icon(Iconsax.scan_barcode, color: kPrimaryColor),
             const SizedBox(width: 15),
           ],
         ),
@@ -167,7 +167,7 @@ class AppDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: lightColor,
+      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
       child: StreamBuilder<User?>(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (context, snapshot) {
@@ -177,7 +177,7 @@ class AppDrawer extends StatelessWidget {
             padding: EdgeInsets.zero,
             children: [
               UserAccountsDrawerHeader(
-                decoration: BoxDecoration(color: kPrimary),
+                decoration: BoxDecoration(color: kPrimaryColor),
                 accountName: Text(
                   user?.displayName ?? 'Your Name',
                   style: TextStyle(
@@ -198,17 +198,17 @@ class AppDrawer extends StatelessWidget {
                   backgroundColor: lightColor,
                   child: Icon(
                     Iconsax.user,
-                    color: kPrimary,
+                    color: kPrimaryColor,
                     size: 40,
                   ),
                 ),
               ),
 
               ListTile(
-                leading: Icon(Iconsax.ticket, color: darkColor),
+                leading: const Icon(Iconsax.ticket, color: Color.fromARGB(255, 243, 172, 166)),
                 title: Text(
                   'My Bookings',
-                  style: TextStyle(fontFamily: primaryFont, color: darkColor),
+                  style: TextStyle(fontFamily: primaryFont, color: Colors.white),
                 ),
                 onTap: () {
                   Navigator.pop(context);
@@ -218,13 +218,13 @@ class AppDrawer extends StatelessWidget {
                   );
                 },
               ),
-              const Divider(),
+              const Divider(color: Colors.white,),
 
               ListTile(
-                leading: Icon(Iconsax.logout, color: kPrimary),
+                leading: const Icon(Iconsax.logout, color: Color.fromARGB(255, 243, 172, 166)),
                 title: Text(
                   'Logout',
-                  style: TextStyle(fontFamily: primaryFont, color: kPrimary),
+                  style: TextStyle(fontFamily: primaryFont, color: Colors.white),
                 ),
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();

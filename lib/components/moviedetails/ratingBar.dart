@@ -26,7 +26,7 @@ class _RatingBarDetailsState extends State<RatingBarDetails> {
       child: Row(
         children: [
           const SizedBox(width: 10,),
-          Icon(Icons.star_rate_rounded, color: kPrimary, size: 30,),
+          Icon(Icons.star_rate_rounded, color: kPrimaryColor, size: 30,),
           const SizedBox(width: 2,),
           Text("$ratingAcquired/5 ", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: textSubTitle),),
           Text("($voteCount votes)", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: 10),),
@@ -37,9 +37,9 @@ class _RatingBarDetailsState extends State<RatingBarDetails> {
             alignment: Alignment.center,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: kPrimary)
+              border: Border.all(color: kPrimaryColor)
             ),
-            child: Text('Rate now', style: TextStyle(color: kPrimary, fontSize: 10, fontFamily: primaryFont),),
+            child: Text('Rate now', style: TextStyle(color: kPrimaryColor, fontSize: 10, fontFamily: primaryFont),),
           ),
           const SizedBox(width: 10,),
         ],

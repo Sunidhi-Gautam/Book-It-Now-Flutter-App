@@ -38,7 +38,7 @@ class _NewReleasesState extends State<NewReleases> {
               children: [
                Text("New Releases ✨",
                     style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: secondaryFonts)),
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: secondaryFonts, color: Colors.white)),
                 const Spacer(),
                 TextButton(
                    onPressed: () {
@@ -47,7 +47,7 @@ class _NewReleasesState extends State<NewReleases> {
       MaterialPageRoute(builder: (context) => const NewReleasesScreen()),
     );
   },
-  child: const Text("View All"),
+  child: Text("View All", style: TextStyle(color: const Color.fromARGB(255, 241, 185, 181), fontSize: 15, fontFamily: subtitleFonts), ),
 ),
               ],
             ),
@@ -96,9 +96,11 @@ class _NewReleasesState extends State<NewReleases> {
                                 movie.title,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
+                                  fontFamily: secondaryFonts,
+                                  color: Colors.white
                                 ),
                               ),
                               const SizedBox(height: 3),
@@ -116,7 +118,8 @@ class _NewReleasesState extends State<NewReleases> {
                                     movie.rating.toStringAsFixed(1),
                                     style: const TextStyle(
                                         fontSize: 12,
-                                        fontWeight: FontWeight.w600),
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white),
                                   ),
                                 ],
                               ),

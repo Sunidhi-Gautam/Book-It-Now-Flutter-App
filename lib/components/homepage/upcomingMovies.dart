@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
+import '../../models/constants.dart';
 import '../../models/movie_model.dart';
 
 class UpcomingMovies extends StatefulWidget {
@@ -28,11 +29,13 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
+            Text(
               "Upcoming Movies 🎞️",
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
+                fontFamily: secondaryFonts,
+                color: Colors.white
               ),
             ),
             const SizedBox(height: 10),
@@ -78,10 +81,12 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                               child: Text(
                                 movie.title,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
-                                ),
+                                  fontFamily: secondaryFonts,
+                                  color: Colors.white 
+                                                               ),
                                 softWrap: true,
                                 maxLines: 2, // limits to 2 lines
                                 overflow: TextOverflow.ellipsis,

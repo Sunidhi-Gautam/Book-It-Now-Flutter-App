@@ -50,6 +50,7 @@ dependencies:
   geolocator: ^9.0.2
   firebase_core: ^4.1.1
   firebase_auth: ^6.1.0
+  intl: ^0.20.2
 
 
 dev_dependencies:
@@ -75,6 +76,15 @@ flutter:
 
   assets:
      - assets/images/
+     - assets/images/svg_unselected_bus_seat.svg
+     - assets/images/svg_selected_bus_seats.svg
+     - assets/images/svg_sold_bus_seat.svg
+     - assets/images/svg_disabled_bus_seat.svg
+     - assets/images/theatre_screen_image.png
+     - assets/images/delhi.png
+     - assets/images/mumbai.png 
+     - assets/images/chennai.png
+     - assets/images/kolkata.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -31,16 +31,17 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
       appBar: AppBar(
         title: Text(
           widget.genreName,
-          style: const TextStyle(
+          style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
-            fontSize: 18,
+            fontFamily: secondaryFonts
           ),
         ),
-        backgroundColor: kPrimary,
+        backgroundColor: kPrimaryColor,
         iconTheme: const IconThemeData(
     color: Color.fromARGB(253, 239, 225, 225), // change the back button color
   ),
@@ -93,16 +94,19 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
                       movie.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
-                      ),
+                        color: Colors.white,
+                        fontFamily: secondaryFonts,
+                                       ),
                     ),
+                    const SizedBox(height: 15),
                   ],
                 ),
               );

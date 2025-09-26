@@ -170,7 +170,7 @@ class _ShowTicketState extends State<ShowTicket> {
             alignment: Alignment.center,
             width: MediaQuery.of(context).size.width-40,
             decoration: BoxDecoration(
-                color: kPrimary,
+                color: kPrimaryColor,
                 borderRadius: BorderRadius.circular(10)
             ),
             child: Text(

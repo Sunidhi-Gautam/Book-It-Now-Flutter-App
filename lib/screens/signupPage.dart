@@ -93,7 +93,7 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const Icon(Icons.theaters, size: 80, color: kPrimaryColor),
+                const Icon(Icons.theaters, size: 80, color: kPrimaryColorColor),
                 const SizedBox(height: 20),
                 const Text(
                   'Create Account',
@@ -211,7 +211,7 @@ class _SignUpPageState extends State<SignUpPage> {
                   child: ElevatedButton(
                     onPressed: _isLoading ? null : _signUp,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColor,
+                      backgroundColor: kPrimaryColorColor,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -243,7 +243,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: const Text(
                         'Sign In',
                         style: TextStyle(
-                          color: kPrimaryColor,
+                          color: kPrimaryColorColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

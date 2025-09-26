@@ -12,7 +12,15 @@ class MovieDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Movie Details")),
+      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
+      appBar: AppBar(title: Text("Movie Details",
+          style: TextStyle(fontFamily: secondaryFonts, color: Colors.white, fontWeight: FontWeight.bold),),
+          backgroundColor: kPrimaryColor,
+          centerTitle: false,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+          
+        ),
       
       // Bottom Buy Ticket button
       bottomNavigationBar: FutureBuilder<MovieDetail>(
@@ -21,7 +29,7 @@ class MovieDetailScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox(
               height: 40,
-              child: Center(child: CircularProgressIndicator(color: Colors.white,)),
+              child: Center(child: CircularProgressIndicator(color: Color.fromARGB(255, 15, 14, 14),)),
             );
           } else if (snapshot.hasError || !snapshot.hasData) {
             return const SizedBox(height: 50);
@@ -32,7 +40,7 @@ class MovieDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 45),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: kPrimary,
+                backgroundColor: kPrimaryColor,
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
@@ -98,6 +106,7 @@ class MovieDetailScreen extends StatelessWidget {
                     style: const TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.bold,
+                      color: Colors.white
                     ),
                   ),
                 ),
@@ -111,7 +120,7 @@ class MovieDetailScreen extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         "${movie.rating.toStringAsFixed(1)} / 10 (${movie.voteCount} votes)",
-                        style: const TextStyle(fontSize: 14),
+                        style: const TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ],
                   ),
@@ -124,7 +133,7 @@ class MovieDetailScreen extends StatelessWidget {
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
                     movie.overview,
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                 ),
 
@@ -133,7 +142,7 @@ class MovieDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
                     "Cast",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
                 SizedBox(
@@ -165,7 +174,7 @@ class MovieDetailScreen extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 12),
+                              style: const TextStyle(fontSize: 12, color: Colors.white),
                             ),
                             Text(
                               actor.character,
@@ -189,13 +198,13 @@ class MovieDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
                     "Reviews",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
                 if (movie.reviews.isEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Text("No reviews yet."),
+                    child: Text("No reviews yet.", style: TextStyle(color: Colors.white),),
                   )
                 else
                   ListView.builder(
@@ -205,6 +214,8 @@ class MovieDetailScreen extends StatelessWidget {
                     itemBuilder: (_, index) {
                       final review = movie.reviews[index];
                       return Card(
+                       color: const Color.fromARGB(255, 30, 29, 29),
+                       shadowColor: const Color.fromARGB(255, 247, 245, 245),
                         margin: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 6,
@@ -217,7 +228,7 @@ class MovieDetailScreen extends StatelessWidget {
                               Text(
                                 review.author,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.bold, color: Colors.white
                                 ),
                               ),
                               const SizedBox(height: 5),
@@ -225,6 +236,7 @@ class MovieDetailScreen extends StatelessWidget {
                                 review.content,
                                 maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
+                                style: const TextStyle(color: Colors.white),
                               ),
                             ],
                           ),
