@@ -10,6 +10,7 @@ import '../components/homepage/upcomingMovies.dart';
 import '../models/constants.dart';
 import 'siginPage.dart';
 import 'showTicket.dart';
+import '../services/wallet_manager.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -204,6 +205,44 @@ class AppDrawer extends StatelessWidget {
                 ),
               ),
 
+              StreamBuilder<double>(
+                stream: WalletManager.getBalanceStream(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    // Show a loading indicator while fetching the balance
+                    return const ListTile(
+                      leading: Icon(Iconsax.wallet_3, color: Colors.grey),
+                      title: Text('My Credits'),
+                      trailing: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      ),
+                    );
+                  }
+                  
+                  // Format and display the balance once it's loaded
+                  final balance = snapshot.data?.toStringAsFixed(2) ?? '0.00';
+                  
+                  return ListTile(
+                    leading: const Icon(Iconsax.wallet_3, color: Colors.white),
+                    title: Text(
+                      'My Credits',
+                      style: TextStyle(fontFamily: primaryFont, color: Colors.white),
+                    ),
+                    trailing: Text(
+                      '₹$balance', // Displaying with a currency symbol
+                      style: TextStyle(
+                        fontFamily: primaryFont,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              const Divider(),
               ListTile(
                 leading: const Icon(Iconsax.ticket, color: Color.fromARGB(255, 243, 172, 166)),
                 title: Text(

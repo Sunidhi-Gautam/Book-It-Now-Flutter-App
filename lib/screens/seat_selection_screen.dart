@@ -1,10 +1,12 @@
 // seat_selection_screen.dart
+// lib/services/booking_service.dart
 
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // Assuming 'constants.dart' defines kPrimaryColorColor
 import '../models/constants.dart';
+import '../services/booking_service.dart';
 
 // --- PRICE CONSTANTS (Unchanged) ---
 const int _priceClassic = 200; 
@@ -38,6 +40,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   Set<SeatNumber> selectedSeats = {};
   int _nextRowLabelIndex = 0;
   int _totalPrice = 0;
+    bool _isProcessing = false;  // for payment processing state
 
   String _getRowLabel(int index) {
     return String.fromCharCode(65 + index);
@@ -111,6 +114,55 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       ),
     );
   }
+
+  // bookings 
+
+Future<void> _handleBooking() async {
+  if (selectedSeats.isEmpty) return;
+
+  setState(() {
+    _isProcessing = true; // Show loading indicator
+  });
+
+  // Convert selected seats to a simple list of strings like ["A1", "J5"]
+  final seatStrings = selectedSeats.map((seat) => seat.toSeatString(_getRowLabel)).toList();
+
+  // Call the booking service
+  bool success = await BookingService.createBooking(
+    movieId: widget.movieId,
+    movieTitle: widget.movieTitle,
+    bookingDetails: widget.bookingDetailsTitle,
+    selectedSeats: seatStrings,
+    totalPrice: _totalPrice,
+  );
+  
+  // Hide loading indicator
+  if (mounted) { // Check if the widget is still in the tree
+    setState(() {
+      _isProcessing = false;
+    });
+  }
+
+  // Handle the result
+  if (success) {
+    // Navigate to a success screen (e.g., your ShowTicket screen)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Booking Successful!'),
+        backgroundColor: Colors.green,
+      ),
+    );
+    // Example: Navigator.of(context).pushReplacement(... a ticket screen ...);
+  } else {
+    // Show an error message
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Booking Failed. Please check your credits and try again.'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -270,26 +322,35 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               const SizedBox(height: 10),
 
               // --- BUTTON DYNAMICALLY SHOWS PRICE ---
-              ElevatedButton(
-                onPressed: _totalPrice > 0 ? () {
-                  debugPrint('Initiating payment for Rs. $_totalPrice. Seats: ${selectedSeats.map((s) => s.toSeatString(_getRowLabel)).join(", ")}');
-                } : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kPrimaryColor,
-                  disabledBackgroundColor: Colors.grey,
-                  shadowColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: Text(
-                  _totalPrice > 0 
-                    ? 'Proceed to Pay Rs. $_totalPrice'
-                    : 'Select Seats to Proceed',
-                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
-                ),
-              ),
+              
+
+ElevatedButton(
+  onPressed: (_totalPrice > 0 && !_isProcessing) ? _handleBooking : null, // Call the handler
+  style: ElevatedButton.styleFrom(
+    backgroundColor: kPrimaryColor,
+    disabledBackgroundColor: Colors.grey,
+    shadowColor: Colors.white,
+    padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(10),
+    ),
+  ),
+  child: _isProcessing 
+      ? const SizedBox( // Show a spinner when processing
+          width: 24,
+          height: 24,
+          child: CircularProgressIndicator(
+            color: Colors.white,
+            strokeWidth: 3,
+          ),
+        )
+      : Text( // Show regular text otherwise
+          _totalPrice > 0 
+            ? 'Proceed to Pay Rs. $_totalPrice'
+            : 'Select Seats to Proceed',
+          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16),
+        ),
+),
               
               const SizedBox(height: 25),
             ],

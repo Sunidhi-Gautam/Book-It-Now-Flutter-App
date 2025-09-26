@@ -2,7 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../models/constants.dart';
-import 'homepage.dart'; // ⬅️ now importing HomeScreen
+import '../services/wallet_manager.dart';
+import 'homepage.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -12,6 +13,9 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
+  // 1. ADD A FORM KEY for validation
+  final _formKey = GlobalKey<FormState>();
+
   bool _isPasswordObscured = true;
   bool _isConfirmPasswordObscured = true;
   bool _isLoading = false;
@@ -31,37 +35,41 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> _signUp() async {
-    if (_passwordController.text != _confirmPasswordController.text) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Passwords do not match")),
-      );
+    // 2. VALIDATE THE FORM before proceeding
+    if (!_formKey.currentState!.validate()) {
       return;
     }
 
     try {
       setState(() => _isLoading = true);
 
-      // Firebase sign-up
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
-      // Optionally update display name with username
       await FirebaseAuth.instance.currentUser?.updateDisplayName(
         _usernameController.text.trim(),
       );
+
+      // 3. PASS THE USERNAME to the wallet manager
+      await WalletManager.createUserWallet(
+        username: _usernameController.text.trim(),
+      );
+
+      // 4. CHECK IF WIDGET IS STILL MOUNTED before using context
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Account created successfully!")),
       );
 
-      // Navigate to Home screen after sign up
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePageScreen()),
       );
     } on FirebaseAuthException catch (e) {
       String message;
+      // ... your excellent error handling logic is perfect ...
       if (e.code == 'weak-password') {
         message = "The password is too weak.";
       } else if (e.code == 'email-already-in-use') {
@@ -71,13 +79,18 @@ class _SignUpPageState extends State<SignUpPage> {
       } else {
         message = "Sign up failed: ${e.message}";
       }
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Unexpected error: $e")),
       );
     } finally {
-      setState(() => _isLoading = false);
+      // Check mounted state before setting state
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
     }
   }
 
@@ -111,11 +124,13 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 50),
 
-                // Username field
-                TextField(
-                  controller: _usernameController,
-                  decoration: InputDecoration(
-                    hintText: 'Username',
+
+                  // 6. CHANGE TextField to TextFormField and add validators
+                  TextFormField(
+                    controller: _usernameController,
+                    decoration: InputDecoration(
+                      // ... your decoration is fine
+                       hintText: 'Username',
                     hintStyle: const TextStyle(color: kGreyColor),
                     prefixIcon: const Icon(Icons.person, color: kGreyColor),
                     filled: true,
@@ -124,16 +139,22 @@ class _SignUpPageState extends State<SignUpPage> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    ),
+                    style: const TextStyle(color: kAccentColor),
+                    validator: (value) {
+                      if (value == null || value.trim().isEmpty) {
+                        return 'Please enter a username';
+                      }
+                      return null;
+                    },
                   ),
-                  style: const TextStyle(color: kAccentColor),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                // Email field
-                TextField(
-                  controller: _emailController,
-                  decoration: InputDecoration(
-                    hintText: 'Email',
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: InputDecoration(
+                     // ... your decoration is fine
+                      hintText: 'Email',
                     hintStyle: const TextStyle(color: kGreyColor),
                     prefixIcon: const Icon(Icons.email_rounded, color: kGreyColor),
                     filled: true,
@@ -142,18 +163,24 @@ class _SignUpPageState extends State<SignUpPage> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    ),
+                    keyboardType: TextInputType.emailAddress,
+                    style: const TextStyle(color: kAccentColor),
+                    validator: (value) {
+                      if (value == null || !value.contains('@')) {
+                        return 'Please enter a valid email';
+                      }
+                      return null;
+                    },
                   ),
-                  keyboardType: TextInputType.emailAddress,
-                  style: const TextStyle(color: kAccentColor),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                // Password field
-                TextField(
-                  controller: _passwordController,
-                  obscureText: _isPasswordObscured,
-                  decoration: InputDecoration(
-                    hintText: 'Password',
+                  TextFormField(
+                    controller: _passwordController,
+                    obscureText: _isPasswordObscured,
+                    decoration: InputDecoration(
+                     // ... your decoration is fine
+                      hintText: 'Password',
                     hintStyle: const TextStyle(color: kGreyColor),
                     prefixIcon: const Icon(Icons.lock_rounded, color: kGreyColor),
                     suffixIcon: IconButton(
@@ -171,17 +198,23 @@ class _SignUpPageState extends State<SignUpPage> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    ),
+                    style: const TextStyle(color: kAccentColor),
+                    validator: (value) {
+                      if (value == null || value.length < 6) {
+                        return 'Password must be at least 6 characters';
+                      }
+                      return null;
+                    },
                   ),
-                  style: const TextStyle(color: kAccentColor),
-                ),
-                const SizedBox(height: 20),
+                  const SizedBox(height: 20),
 
-                // Confirm Password field
-                TextField(
-                  controller: _confirmPasswordController,
-                  obscureText: _isConfirmPasswordObscured,
-                  decoration: InputDecoration(
-                    hintText: 'Confirm Password',
+                  TextFormField(
+                    controller: _confirmPasswordController,
+                    obscureText: _isConfirmPasswordObscured,
+                    decoration: InputDecoration(
+                     // ... your decoration is fine
+                       hintText: 'Confirm Password',
                     hintStyle: const TextStyle(color: kGreyColor),
                     prefixIcon: const Icon(Icons.lock_clock, color: kGreyColor),
                     suffixIcon: IconButton(
@@ -199,10 +232,16 @@ class _SignUpPageState extends State<SignUpPage> {
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,
                     ),
+                    ),
+                    style: const TextStyle(color: kAccentColor),
+                    validator: (value) {
+                      if (value != _passwordController.text) {
+                        return 'Passwords do not match';
+                      }
+                      return null;
+                    },
                   ),
-                  style: const TextStyle(color: kAccentColor),
-                ),
-                const SizedBox(height: 40),
+                  const SizedBox(height: 40),
 
                 // Sign Up Button
                 SizedBox(
@@ -226,12 +265,11 @@ class _SignUpPageState extends State<SignUpPage> {
                               color: kAccentColor,
                             ),
                           ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 40),
-
-                // Sign In Link
-                Row(
+                  // ... the rest of your UI is perfect ...
+                  const SizedBox(height: 40),
+                   Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text("Already have an account? ",
@@ -250,11 +288,11 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ],
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }
