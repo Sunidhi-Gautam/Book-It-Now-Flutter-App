@@ -39,13 +39,13 @@ class _SigninPageState extends State<SigninPage> {
     try {
       setState(() => _isLoading = true);
 
-      // Firebase sign-in
       await FirebaseAuth.instance.signInWithEmailAndPassword(
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
 
       if (mounted) {
+        // This is correct: replace the signin page with home on success
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomePageScreen()),
         );
@@ -89,11 +89,12 @@ class _SigninPageState extends State<SigninPage> {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: _emailController.text.trim());
-
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Password reset email sent")),
       );
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Failed to send reset email: $e")),
       );
@@ -107,7 +108,8 @@ class _SigninPageState extends State<SigninPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -117,11 +119,10 @@ class _SigninPageState extends State<SigninPage> {
                 Text(
                   'BOOK IT NOW!',
                   style: TextStyle(
-                    color: kAccentColor,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: primaryFont
-                  ),
+                      color: kAccentColor,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: primaryFont),
                 ),
                 const SizedBox(height: 10),
                 const Text(
@@ -133,14 +134,13 @@ class _SigninPageState extends State<SigninPage> {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 60),
-
-                // Email Text Field
                 TextField(
                   controller: _emailController,
                   decoration: InputDecoration(
                     hintText: 'Email',
                     hintStyle: const TextStyle(color: kGreyColor),
-                    prefixIcon: const Icon(Icons.email_rounded, color: kGreyColor),
+                    prefixIcon:
+                        const Icon(Icons.email_rounded, color: kGreyColor),
                     filled: true,
                     fillColor: kTextFieldFill,
                     border: OutlineInputBorder(
@@ -152,15 +152,14 @@ class _SigninPageState extends State<SigninPage> {
                   style: const TextStyle(color: kAccentColor),
                 ),
                 const SizedBox(height: 20),
-
-                // Password Text Field
                 TextField(
                   controller: _passwordController,
                   obscureText: _isPasswordObscured,
                   decoration: InputDecoration(
                     hintText: 'Password',
                     hintStyle: const TextStyle(color: kGreyColor),
-                    prefixIcon: const Icon(Icons.lock_rounded, color: kGreyColor),
+                    prefixIcon:
+                        const Icon(Icons.lock_rounded, color: kGreyColor),
                     suffixIcon: IconButton(
                       icon: Icon(
                         _isPasswordObscured
@@ -169,7 +168,8 @@ class _SigninPageState extends State<SigninPage> {
                         color: kGreyColor,
                       ),
                       onPressed: () {
-                        setState(() => _isPasswordObscured = !_isPasswordObscured);
+                        setState(
+                            () => _isPasswordObscured = !_isPasswordObscured);
                       },
                     ),
                     filled: true,
@@ -182,8 +182,6 @@ class _SigninPageState extends State<SigninPage> {
                   style: const TextStyle(color: kAccentColor),
                 ),
                 const SizedBox(height: 15),
-
-                // Forgot Password
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
@@ -195,8 +193,6 @@ class _SigninPageState extends State<SigninPage> {
                   ),
                 ),
                 const SizedBox(height: 30),
-
-                // Sign In Button
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -224,8 +220,7 @@ class _SigninPageState extends State<SigninPage> {
                           ),
                   ),
                 ),
-
-                // Sign Up Link
+                const SizedBox(height: 20), // Added some space for better UI
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -233,8 +228,11 @@ class _SigninPageState extends State<SigninPage> {
                         style: TextStyle(color: kGreyColor)),
                     GestureDetector(
                       onTap: () {
-                        Navigator.of(context).pushReplacement(
-                          MaterialPageRoute(builder: (context) => const SignUpPage()),
+                        // --- CORRECTED NAVIGATION ---
+                        // Use push so we can come back with pop()
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) => const SignUpPage()),
                         );
                       },
                       child: const Text(

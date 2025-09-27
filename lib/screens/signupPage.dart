@@ -13,7 +13,6 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  // 1. ADD A FORM KEY for validation
   final _formKey = GlobalKey<FormState>();
 
   bool _isPasswordObscured = true;
@@ -23,7 +22,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   @override
   void dispose() {
@@ -35,7 +35,6 @@ class _SignUpPageState extends State<SignUpPage> {
   }
 
   Future<void> _signUp() async {
-    // 2. VALIDATE THE FORM before proceeding
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -52,24 +51,23 @@ class _SignUpPageState extends State<SignUpPage> {
         _usernameController.text.trim(),
       );
 
-      // 3. PASS THE USERNAME to the wallet manager
       await WalletManager.createUserWallet(
         username: _usernameController.text.trim(),
       );
 
-      // 4. CHECK IF WIDGET IS STILL MOUNTED before using context
       if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Account created successfully!")),
       );
 
+      // --- CORRECTED NAVIGATION ---
+      // This is correct. After signing up, replace this page with the home page.
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePageScreen()),
       );
     } on FirebaseAuthException catch (e) {
       String message;
-      // ... your excellent error handling logic is perfect ...
       if (e.code == 'weak-password') {
         message = "The password is too weak.";
       } else if (e.code == 'email-already-in-use') {
@@ -80,14 +78,14 @@ class _SignUpPageState extends State<SignUpPage> {
         message = "Sign up failed: ${e.message}";
       }
       if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(message)));
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Unexpected error: $e")),
       );
     } finally {
-      // Check mounted state before setting state
       if (mounted) {
         setState(() => _isLoading = false);
       }
@@ -101,44 +99,44 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                const Icon(Icons.theaters, size: 80, color: kPrimaryColorColor),
-                const SizedBox(height: 20),
-                const Text(
-                  'Create Account',
-                  style: TextStyle(
-                    color: kAccentColor,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
+            padding:
+                const EdgeInsets.symmetric(horizontal: 30.0, vertical: 40.0),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const Icon(Icons.theaters,
+                      size: 80, color: kPrimaryColorColor),
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Create Account',
+                    style: TextStyle(
+                      color: kAccentColor,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 10),
-                const Text(
-                  'Start your movie journey with us',
-                  style: TextStyle(color: kGreyColor, fontSize: 16),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 50),
-
-
-                  // 6. CHANGE TextField to TextFormField and add validators
+                  const SizedBox(height: 10),
+                  const Text(
+                    'Start your movie journey with us',
+                    style: TextStyle(color: kGreyColor, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 50),
                   TextFormField(
                     controller: _usernameController,
                     decoration: InputDecoration(
-                      // ... your decoration is fine
-                       hintText: 'Username',
-                    hintStyle: const TextStyle(color: kGreyColor),
-                    prefixIcon: const Icon(Icons.person, color: kGreyColor),
-                    filled: true,
-                    fillColor: kTextFieldFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
+                      hintText: 'Username',
+                      hintStyle: const TextStyle(color: kGreyColor),
+                      prefixIcon: const Icon(Icons.person, color: kGreyColor),
+                      filled: true,
+                      fillColor: kTextFieldFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     style: const TextStyle(color: kAccentColor),
                     validator: (value) {
@@ -149,55 +147,57 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                   const SizedBox(height: 20),
-
                   TextFormField(
                     controller: _emailController,
                     decoration: InputDecoration(
-                     // ... your decoration is fine
                       hintText: 'Email',
-                    hintStyle: const TextStyle(color: kGreyColor),
-                    prefixIcon: const Icon(Icons.email_rounded, color: kGreyColor),
-                    filled: true,
-                    fillColor: kTextFieldFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
+                      hintStyle: const TextStyle(color: kGreyColor),
+                      prefixIcon:
+                          const Icon(Icons.email_rounded, color: kGreyColor),
+                      filled: true,
+                      fillColor: kTextFieldFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     keyboardType: TextInputType.emailAddress,
                     style: const TextStyle(color: kAccentColor),
                     validator: (value) {
-                      if (value == null || !value.contains('@')) {
+                      if (value == null ||
+                          !RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
                         return 'Please enter a valid email';
                       }
                       return null;
                     },
                   ),
                   const SizedBox(height: 20),
-
                   TextFormField(
                     controller: _passwordController,
                     obscureText: _isPasswordObscured,
                     decoration: InputDecoration(
-                     // ... your decoration is fine
                       hintText: 'Password',
-                    hintStyle: const TextStyle(color: kGreyColor),
-                    prefixIcon: const Icon(Icons.lock_rounded, color: kGreyColor),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordObscured ? Icons.visibility_off : Icons.visibility,
-                        color: kGreyColor,
+                      hintStyle: const TextStyle(color: kGreyColor),
+                      prefixIcon:
+                          const Icon(Icons.lock_rounded, color: kGreyColor),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordObscured
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: kGreyColor,
+                        ),
+                        onPressed: () {
+                          setState(() =>
+                              _isPasswordObscured = !_isPasswordObscured);
+                        },
                       ),
-                      onPressed: () {
-                        setState(() => _isPasswordObscured = !_isPasswordObscured);
-                      },
-                    ),
-                    filled: true,
-                    fillColor: kTextFieldFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
+                      filled: true,
+                      fillColor: kTextFieldFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     style: const TextStyle(color: kAccentColor),
                     validator: (value) {
@@ -208,30 +208,32 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                   const SizedBox(height: 20),
-
                   TextFormField(
                     controller: _confirmPasswordController,
                     obscureText: _isConfirmPasswordObscured,
                     decoration: InputDecoration(
-                     // ... your decoration is fine
-                       hintText: 'Confirm Password',
-                    hintStyle: const TextStyle(color: kGreyColor),
-                    prefixIcon: const Icon(Icons.lock_clock, color: kGreyColor),
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isConfirmPasswordObscured ? Icons.visibility_off : Icons.visibility,
-                        color: kGreyColor,
+                      hintText: 'Confirm Password',
+                      hintStyle: const TextStyle(color: kGreyColor),
+                      prefixIcon:
+                          const Icon(Icons.lock_clock, color: kGreyColor),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isConfirmPasswordObscured
+                              ? Icons.visibility_off
+                              : Icons.visibility,
+                          color: kGreyColor,
+                        ),
+                        onPressed: () {
+                          setState(() => _isConfirmPasswordObscured =
+                              !_isConfirmPasswordObscured);
+                        },
                       ),
-                      onPressed: () {
-                        setState(() => _isConfirmPasswordObscured = !_isConfirmPasswordObscured);
-                      },
-                    ),
-                    filled: true,
-                    fillColor: kTextFieldFill,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      borderSide: BorderSide.none,
-                    ),
+                      filled: true,
+                      fillColor: kTextFieldFill,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
                     ),
                     style: const TextStyle(color: kAccentColor),
                     validator: (value) {
@@ -242,57 +244,57 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                   const SizedBox(height: 40),
-
-                // Sign Up Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _signUp,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kPrimaryColorColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: _isLoading
-                        ? const CircularProgressIndicator(color: Colors.white)
-                        : const Text(
-                            'Sign Up',
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: kAccentColor,
-                            ),
-                          ),
-                    ),
-                  ),
-                  // ... the rest of your UI is perfect ...
-                  const SizedBox(height: 40),
-                   Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Already have an account? ",
-                        style: TextStyle(color: kGreyColor)),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).pop(); // just go back
-                      },
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: kPrimaryColorColor,
-                          fontWeight: FontWeight.bold,
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _signUp,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kPrimaryColorColor,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
+                      child: _isLoading
+                          ? const CircularProgressIndicator(color: Colors.white)
+                          : const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: kAccentColor,
+                              ),
+                            ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 40),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Already have an account? ",
+                          style: TextStyle(color: kGreyColor)),
+                      GestureDetector(
+                        onTap: () {
+                          // --- CORRECTED NAVIGATION ---
+                          // This will now work correctly because we used push() to get here
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: kPrimaryColorColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }
