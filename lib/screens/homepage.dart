@@ -243,6 +243,21 @@ class AppDrawer extends StatelessWidget {
                 },
               ),
               const Divider(),
+
+              // --- NEW: 'Add Credits' Button ---
+              ListTile(
+                leading: const Icon(Iconsax.wallet_add_1, color: Color.fromARGB(255, 166, 243, 172)),
+                title: Text(
+                  'Add Credits',
+                  style: TextStyle(fontFamily: primaryFont, color: Colors.white),
+                ),
+                onTap: () {
+                  _showAddCreditsDialog(context);
+                },
+              ),
+              
+              const Divider(color: Colors.white,),
+              
               ListTile(
                 leading: const Icon(Iconsax.ticket, color: Color.fromARGB(255, 243, 172, 166)),
                 title: Text(
@@ -277,6 +292,57 @@ class AppDrawer extends StatelessWidget {
             ],
           );
         },
+      ),
+    );
+  }
+
+  // --- NEW: Dialog to Add Credits ---
+  void _showAddCreditsDialog(BuildContext context) {
+    final TextEditingController _amountController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Add Credits'),
+        content: TextField(
+          controller: _amountController,
+          keyboardType: TextInputType.number,
+          decoration: const InputDecoration(
+            labelText: 'Amount',
+            hintText: 'Enter amount to add',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              final amountText = _amountController.text;
+              final amount = double.tryParse(amountText);
+
+              if (amount != null && amount > 0) {
+                final success = await WalletManager.addCredits(amount);
+                Navigator.pop(context); // Close the dialog
+
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(success
+                        ? '₹$amount added to your wallet!'
+                        : 'Failed to add credits. Please try again.'),
+                  ),
+                );
+              } else {
+                // Show error if input is invalid
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter a valid amount.')),
+                );
+              }
+            },
+            child: const Text('Add'),
+          ),
+        ],
       ),
     );
   }
