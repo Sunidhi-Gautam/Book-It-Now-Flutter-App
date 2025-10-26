@@ -36,24 +36,26 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
         title: Text(
           widget.genreName,
           style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-            fontFamily: secondaryFonts
-          ),
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: secondaryFonts),
         ),
         backgroundColor: kPrimaryColor,
         iconTheme: const IconThemeData(
-    color: Color.fromARGB(253, 239, 225, 225), // change the back button color
-  ),
+          color: Color.fromARGB(
+              253, 239, 225, 225), // change the back button color
+        ),
       ),
       body: FutureBuilder<List<Movie>>(
         future: genreMovies,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingAnimationWidget.waveDots(
-              color: const Color.fromARGB(158, 255, 255, 255),
-              size: 50, // Adjust size if needed
-            ),);
+            return Center(
+              child: LoadingAnimationWidget.waveDots(
+                color: const Color.fromARGB(158, 255, 255, 255),
+                size: 50, // Adjust size if needed
+              ),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -77,7 +79,10 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => MovieDetailScreen(movieId: movie.id),
+                      builder: (_) => MovieDetailScreen(
+                        movieId: movie.id,
+                        movieTitle: movie.title,
+                      ),
                     ),
                   );
                 },
@@ -104,7 +109,7 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                         fontFamily: secondaryFonts,
-                                       ),
+                      ),
                     ),
                     const SizedBox(height: 15),
                   ],

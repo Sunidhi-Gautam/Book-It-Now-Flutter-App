@@ -8,8 +8,9 @@ import '../components/homepage/newRelases.dart';
 import '../components/homepage/topCarousel.dart';
 import '../components/homepage/upcomingMovies.dart';
 import '../models/constants.dart';
+import 'booking_store.dart';
 import 'siginPage.dart';
-import 'showTicket.dart';
+import 'my_bookings.dart';
 import '../services/wallet_manager.dart';
 
 class HomePageScreen extends StatefulWidget {
@@ -59,8 +60,8 @@ class _HomePageScreenState extends State<HomePageScreen> {
             onTap: () => Scaffold.of(context).openDrawer(),
             child: Container(
               margin: const EdgeInsets.all(8),
-             
-              child: const Icon(Iconsax.menu_1, color: Color.fromARGB(255, 238, 118, 118), size: 28),
+              child: const Icon(Iconsax.menu_1,
+                  color: Color.fromARGB(255, 238, 118, 118), size: 28),
             ),
           ),
         ),
@@ -212,7 +213,7 @@ class AppDrawer extends StatelessWidget {
                     // Show a loading indicator while fetching the balance
                     return const ListTile(
                       leading: Icon(Iconsax.wallet_3, color: Colors.grey),
-                      title: Text('My Credits'),
+                      title: Text('My Wallet'),
                       trailing: SizedBox(
                         width: 20,
                         height: 20,
@@ -220,15 +221,16 @@ class AppDrawer extends StatelessWidget {
                       ),
                     );
                   }
-                  
+
                   // Format and display the balance once it's loaded
                   final balance = snapshot.data?.toStringAsFixed(2) ?? '0.00';
-                  
+
                   return ListTile(
                     leading: const Icon(Iconsax.wallet_3, color: Colors.white),
                     title: Text(
-                      'My Credits',
-                      style: TextStyle(fontFamily: primaryFont, color: Colors.white),
+                      'My Wallet',
+                      style: TextStyle(
+                          fontFamily: primaryFont, color: Colors.white),
                     ),
                     trailing: Text(
                       '₹$balance', // Displaying with a currency symbol
@@ -246,39 +248,51 @@ class AppDrawer extends StatelessWidget {
 
               // --- NEW: 'Add Credits' Button ---
               ListTile(
-                leading: const Icon(Iconsax.wallet_add_1, color: Color.fromARGB(255, 166, 243, 172)),
+                leading: const Icon(Iconsax.wallet_add_1,
+                    color: Color.fromARGB(255, 166, 243, 172)),
                 title: Text(
-                  'Add Credits',
-                  style: TextStyle(fontFamily: primaryFont, color: Colors.white),
+                  'Add Money',
+                  style:
+                      TextStyle(fontFamily: primaryFont, color: Colors.white),
                 ),
                 onTap: () {
                   _showAddCreditsDialog(context);
                 },
               ),
-              
-              const Divider(color: Colors.white,),
-              
+
+              const Divider(
+                color: Colors.white,
+              ),
+
               ListTile(
-                leading: const Icon(Iconsax.ticket, color: Color.fromARGB(255, 243, 172, 166)),
+                leading: const Icon(Iconsax.ticket,
+                    color: Color.fromARGB(255, 243, 172, 166)),
                 title: Text(
                   'My Bookings',
-                  style: TextStyle(fontFamily: primaryFont, color: Colors.white),
+                  style:
+                      TextStyle(fontFamily: primaryFont, color: Colors.white),
                 ),
                 onTap: () {
                   Navigator.pop(context);
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const ShowTicket()),
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            MyBookingsPage(bookings: BookingStore.bookings)),
                   );
                 },
               ),
-              const Divider(color: Colors.white,),
+              const Divider(
+                color: Colors.white,
+              ),
 
               ListTile(
-                leading: const Icon(Iconsax.logout, color: Color.fromARGB(255, 243, 172, 166)),
+                leading: const Icon(Iconsax.logout,
+                    color: Color.fromARGB(255, 243, 172, 166)),
                 title: Text(
                   'Logout',
-                  style: TextStyle(fontFamily: primaryFont, color: Colors.white),
+                  style:
+                      TextStyle(fontFamily: primaryFont, color: Colors.white),
                 ),
                 onTap: () async {
                   await FirebaseAuth.instance.signOut();

@@ -1,11 +1,13 @@
 // SelectLocationScreen.dart
 
+// ignore_for_file: curly_braces_in_flow_control_structures, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dart:convert';
 // Assuming 'constants.dart' defines kPrimaryColor and secondaryFonts
-import '../models/constants.dart'; 
+import '../models/constants.dart';
 import 'cinema_list_screen.dart';
 
 class SelectLocationScreen extends StatelessWidget {
@@ -21,27 +23,27 @@ class SelectLocationScreen extends StatelessWidget {
   // 💡 UPDATED: Added an 'image' path for each city
   final List<Map<String, dynamic>> cities = const [
     {
-      'name': 'Delhi', 
-      'lat': 28.6139, 
-      'lng': 77.2090, 
+      'name': 'Delhi',
+      'lat': 28.6139,
+      'lng': 77.2090,
       'image': 'assets/images/delhi.png' // Ensure this path is correct
     },
     {
-      'name': 'Mumbai', 
-      'lat': 19.0760, 
-      'lng': 72.8777, 
+      'name': 'Mumbai',
+      'lat': 19.0760,
+      'lng': 72.8777,
       'image': 'assets/images/mumbai.png', // Ensure this path is correct
     },
     {
-      'name': 'Chennai', 
-      'lat': 13.0827, 
-      'lng': 80.2707, 
+      'name': 'Chennai',
+      'lat': 13.0827,
+      'lng': 80.2707,
       'image': 'assets/images/chennai.png' // Ensure this path is correct
     },
     {
-      'name': 'Kolkata', 
-      'lat': 22.5726, 
-      'lng': 88.3639, 
+      'name': 'Kolkata',
+      'lat': 22.5726,
+      'lng': 88.3639,
       'image': 'assets/images/kolkata.png' // Ensure this path is correct
     },
   ];
@@ -70,22 +72,26 @@ class SelectLocationScreen extends StatelessWidget {
     final cinemas = elements
         .where((e) => e['tags'] != null && e['tags']['name'] != null)
         .map<Map<String, String>>((e) {
-      final tags = e['tags'] as Map<String, dynamic>;
+          final tags = e['tags'] as Map<String, dynamic>;
 
-      // Collect all possible address parts
-      List<String> parts = [];
-      if (tags['addr:street'] != null) parts.add(tags['addr:street'].toString());
-      if (tags['addr:suburb'] != null) parts.add(tags['addr:suburb'].toString());
-      if (tags['addr:district'] != null) parts.add(tags['addr:district'].toString());
-      if (tags['addr:city'] != null) parts.add(tags['addr:city'].toString());
+          // Collect all possible address parts
+          List<String> parts = [];
+          if (tags['addr:street'] != null)
+            parts.add(tags['addr:street'].toString());
+          if (tags['addr:suburb'] != null)
+            parts.add(tags['addr:suburb'].toString());
+          if (tags['addr:district'] != null)
+            parts.add(tags['addr:district'].toString());
+          if (tags['addr:city'] != null)
+            parts.add(tags['addr:city'].toString());
 
-      final location = parts.join(", "); // Combine available parts
+          final location = parts.join(", "); // Combine available parts
 
-      return {
-        'name': tags['name'].toString(),
-        'location': location,
-      };
-    })
+          return {
+            'name': tags['name'].toString(),
+            'location': location,
+          };
+        })
         // Only keep cinemas with at least one location field
         .where((c) => c['location'] != null && c['location']!.isNotEmpty)
         .toList();
@@ -99,7 +105,9 @@ class SelectLocationScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: kPrimaryColor,
         elevation: 0,
-        iconTheme: const IconThemeData(color:Colors.white,),
+        iconTheme: const IconThemeData(
+          color: Colors.white,
+        ),
         title: Text(
           "Select Location",
           style: TextStyle(
@@ -110,7 +118,8 @@ class SelectLocationScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 15, 14, 14),
-      body : Center(child: Padding(
+      body: Center(
+          child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: GridView.builder(
           itemCount: cities.length,
@@ -159,13 +168,15 @@ class SelectLocationScreen extends StatelessWidget {
                   ),
                 );
               },
-              child: ClipRRect( // Clip the tile to give it rounded corners
+              child: ClipRRect(
+                // Clip the tile to give it rounded corners
                 borderRadius: BorderRadius.circular(12),
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(12),
-                    boxShadow: [ // Optional: Add shadow for depth
+                    boxShadow: [
+                      // Optional: Add shadow for depth
                       BoxShadow(
                         color: Colors.black.withOpacity(0.2),
                         spreadRadius: 1,
@@ -180,16 +191,18 @@ class SelectLocationScreen extends StatelessWidget {
                       // 1. City Image
                       Image.asset(
                         imagePath,
-                        fit: BoxFit.cover, // Ensures the image covers the tile area
+                        fit: BoxFit
+                            .cover, // Ensures the image covers the tile area
                         // Fallback in case the image asset is missing
                         errorBuilder: (context, error, stackTrace) => Container(
                           color: Colors.grey.shade300,
                           child: Center(
-                            child: Icon(Icons.location_city, size: 40, color: kPrimaryColor),
+                            child: Icon(Icons.location_city,
+                                size: 40, color: kPrimaryColor),
                           ),
                         ),
                       ),
-                      
+
                       // 2. Gradient Overlay for text contrast (Bottom Fade)
                       Container(
                         decoration: BoxDecoration(
@@ -204,7 +217,7 @@ class SelectLocationScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
+
                       // 3. City Name Text
                       Positioned(
                         bottom: 10,
@@ -213,7 +226,8 @@ class SelectLocationScreen extends StatelessWidget {
                         child: Text(
                           cityName,
                           style: const TextStyle(
-                            color: Colors.white, // White text over the dark overlay
+                            color: Colors
+                                .white, // White text over the dark overlay
                             fontSize: 22,
                             fontWeight: FontWeight.w900,
                             shadows: [
@@ -233,8 +247,8 @@ class SelectLocationScreen extends StatelessWidget {
               ),
             );
           },
-        ),)
-      ),
+        ),
+      )),
     );
   }
 }

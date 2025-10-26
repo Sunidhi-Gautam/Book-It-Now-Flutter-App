@@ -26,7 +26,13 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 15, 14, 14),
       appBar: AppBar(
-        title:  Text("New Releases", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontFamily: secondaryFonts),),
+        title: Text(
+          "New Releases",
+          style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+              fontFamily: secondaryFonts),
+        ),
         backgroundColor: kPrimaryColor,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -34,10 +40,12 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
         future: futureMovies,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: LoadingAnimationWidget.waveDots(
-              color: const Color.fromARGB(158, 255, 255, 255),
-              size: 50, // Adjust size if needed
-            ),);
+            return Center(
+              child: LoadingAnimationWidget.waveDots(
+                color: const Color.fromARGB(158, 255, 255, 255),
+                size: 50, // Adjust size if needed
+              ),
+            );
           } else if (snapshot.hasError) {
             return Center(child: Text("Error: ${snapshot.error}"));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -61,7 +69,10 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => MovieDetailScreen(movieId: movie.id),
+                      builder: (_) => MovieDetailScreen(
+                        movieId: movie.id,
+                        movieTitle: movie.title,
+                      ),
                     ),
                   );
                 },
@@ -84,11 +95,10 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        fontFamily: secondaryFonts,
-                        color: Colors.white
-                      ),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: secondaryFonts,
+                          color: Colors.white),
                     ),
                     const SizedBox(height: 10),
                   ],

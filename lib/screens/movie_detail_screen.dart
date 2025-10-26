@@ -7,21 +7,28 @@ import 'select_location_screen.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int movieId;
-  const MovieDetailScreen({super.key, required this.movieId});
+  final String movieTitle;
+  const MovieDetailScreen(
+      {super.key, required this.movieId, required this.movieTitle});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 15, 14, 14),
-      appBar: AppBar(title: Text("Movie Details",
-          style: TextStyle(fontFamily: secondaryFonts, color: Colors.white, fontWeight: FontWeight.bold),),
-          backgroundColor: kPrimaryColor,
-          centerTitle: false,
-          elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
-          
+      appBar: AppBar(
+        title: Text(
+          "Movie Details",
+          style: TextStyle(
+              fontFamily: secondaryFonts,
+              color: Colors.white,
+              fontWeight: FontWeight.bold),
         ),
-      
+        backgroundColor: kPrimaryColor,
+        centerTitle: false,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+      ),
+
       // Bottom Buy Ticket button
       bottomNavigationBar: FutureBuilder<MovieDetail>(
         future: ApiService().fetchMovieDetails(movieId),
@@ -29,7 +36,10 @@ class MovieDetailScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox(
               height: 40,
-              child: Center(child: CircularProgressIndicator(color: Color.fromARGB(255, 15, 14, 14),)),
+              child: Center(
+                  child: CircularProgressIndicator(
+                color: Color.fromARGB(255, 15, 14, 14),
+              )),
             );
           } else if (snapshot.hasError || !snapshot.hasData) {
             return const SizedBox(height: 50);
@@ -104,10 +114,9 @@ class MovieDetailScreen extends StatelessWidget {
                   child: Text(
                     movie.title,
                     style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white
-                    ),
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
 
@@ -120,7 +129,8 @@ class MovieDetailScreen extends StatelessWidget {
                       const SizedBox(width: 5),
                       Text(
                         "${movie.rating.toStringAsFixed(1)} / 10 (${movie.voteCount} votes)",
-                        style: const TextStyle(fontSize: 14, color: Colors.white),
+                        style:
+                            const TextStyle(fontSize: 14, color: Colors.white),
                       ),
                     ],
                   ),
@@ -142,7 +152,10 @@ class MovieDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
                     "Cast",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
                 SizedBox(
@@ -174,7 +187,8 @@ class MovieDetailScreen extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
-                              style: const TextStyle(fontSize: 12, color: Colors.white),
+                              style: const TextStyle(
+                                  fontSize: 12, color: Colors.white),
                             ),
                             Text(
                               actor.character,
@@ -198,24 +212,31 @@ class MovieDetailScreen extends StatelessWidget {
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
                     "Reviews",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
                 if (movie.reviews.isEmpty)
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12.0),
-                    child: Text("No reviews yet.", style: TextStyle(color: Colors.white),),
+                    child: Text(
+                      "No reviews yet.",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   )
                 else
                   ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(), // To allow inside scroll view
+                    physics:
+                        const NeverScrollableScrollPhysics(), // To allow inside scroll view
                     shrinkWrap: true,
                     itemCount: movie.reviews.length,
                     itemBuilder: (_, index) {
                       final review = movie.reviews[index];
                       return Card(
-                       color: const Color.fromARGB(255, 30, 29, 29),
-                       shadowColor: const Color.fromARGB(255, 247, 245, 245),
+                        color: const Color.fromARGB(255, 30, 29, 29),
+                        shadowColor: const Color.fromARGB(255, 247, 245, 245),
                         margin: const EdgeInsets.symmetric(
                           horizontal: 12,
                           vertical: 6,
@@ -228,8 +249,8 @@ class MovieDetailScreen extends StatelessWidget {
                               Text(
                                 review.author,
                                 style: const TextStyle(
-                                  fontWeight: FontWeight.bold, color: Colors.white
-                                ),
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
                               const SizedBox(height: 5),
                               Text(
