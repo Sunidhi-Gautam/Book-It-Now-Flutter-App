@@ -28,6 +28,7 @@ class SeatSelectionScreen extends StatefulWidget {
   final String cinemaName;
   final String cinemaLocation;
   final String dateTime;
+  final List<String> castList;
 
   const SeatSelectionScreen({
     super.key,
@@ -37,6 +38,7 @@ class SeatSelectionScreen extends StatefulWidget {
     required this.cinemaName,
     required this.cinemaLocation,
     required this.dateTime,
+    required this.castList,
   });
 
   @override
@@ -166,6 +168,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           showTime: widget.dateTime,
           selectedSeats: seatStrings,
           totalPrice: _totalPrice,
+          castList: widget.castList,
         ),
       ),
     );

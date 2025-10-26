@@ -57,12 +57,14 @@ class MovieDetailScreen extends StatelessWidget {
                 ),
               ),
               onPressed: () {
+                final castList = movie.cast.map((actor) => actor.name).toList();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
                     builder: (_) => SelectLocationScreen(
                       movieId: movieId,
                       movieTitle: movie.title,
+                      castList: castList,
                     ),
                   ),
                 );

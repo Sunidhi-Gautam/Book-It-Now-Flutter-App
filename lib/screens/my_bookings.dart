@@ -257,7 +257,7 @@ class BookingDetailsSheet extends StatelessWidget {
                               movieTitle: booking['movieTitle'],
                               posterUrl: booking['posterUrl'],
                               castList:
-                                  booking['castList'] ?? ["Actor 1", "Actor 2"],
+                                  List<String>.from(booking['castList'] ?? []),
                               initialCredits: 0,
                               bookingIndex: bookingIndex,
                             ),

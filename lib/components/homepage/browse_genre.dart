@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../models/constants.dart';
-import '../../screens/genre_movies_scree.dart';
+import '../../screens/genre_movies_screen.dart';
 
 class BrowseByGenre extends StatelessWidget {
   const BrowseByGenre({super.key});
@@ -56,14 +56,14 @@ class BrowseByGenre extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: kPrimaryColor,
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color.fromARGB(233, 74, 4, 4)),
+                      border: Border.all(
+                          color: const Color.fromARGB(233, 74, 4, 4)),
                       boxShadow: const [
                         BoxShadow(
-                          color: Colors.black,
-                          blurRadius: 4,
-                          offset: Offset(0, 0),
-                          spreadRadius: 0.2
-                        ),
+                            color: Colors.black,
+                            blurRadius: 4,
+                            offset: Offset(0, 0),
+                            spreadRadius: 0.2),
                       ],
                     ),
                     child: Center(

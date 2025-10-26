@@ -13,11 +13,13 @@ import 'cinema_list_screen.dart';
 class SelectLocationScreen extends StatelessWidget {
   final int movieId; // receive movieId from previous screen
   final String movieTitle; // receive movieTitle from previous screen
+  final List<String> castList;
 
   const SelectLocationScreen({
     super.key,
     required this.movieId,
     required this.movieTitle,
+    required this.castList,
   });
 
   // 💡 UPDATED: Added an 'image' path for each city
@@ -164,6 +166,7 @@ class SelectLocationScreen extends StatelessWidget {
                       cinemas: cinemas,
                       movieId: movieId,
                       movieTitle: movieTitle,
+                      castList: castList,
                     ),
                   ),
                 );

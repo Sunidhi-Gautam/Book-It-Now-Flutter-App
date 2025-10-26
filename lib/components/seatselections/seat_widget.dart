@@ -1,11 +1,13 @@
+// ignore_for_file: unreachable_switch_default
+
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-
 class SeatWidget extends StatefulWidget {
   final SeatModel model;
-  final void Function(int rowI, int colI, SeatState currentState) onSeatStateChanged;
+  final void Function(int rowI, int colI, SeatState currentState)
+      onSeatStateChanged;
 
   const SeatWidget({
     super.key,
@@ -37,7 +39,8 @@ class _SeatWidgetState extends State<SeatWidget> {
         } else {
           return; // sold or disabled cannot be tapped
         }
-        widget.onSeatStateChanged(widget.model.rowI, widget.model.colI, seatState);
+        widget.onSeatStateChanged(
+            widget.model.rowI, widget.model.colI, seatState);
       },
       child: seatState != SeatState.empty
           ? SvgPicture.asset(
@@ -60,7 +63,7 @@ class _SeatWidgetState extends State<SeatWidget> {
         return widget.model.pathUnSelectedSeat;
       case SeatState.sold:
         return widget.model.pathSoldSeat;
-       case SeatState.disabled:
+      case SeatState.disabled:
         return widget.model.pathDisabledSeat;
       case SeatState.empty:
       default:

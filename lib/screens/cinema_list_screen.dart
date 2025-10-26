@@ -11,6 +11,7 @@ class CinemaListScreen extends StatefulWidget {
   final List<Map<String, String>> cinemas;
   final int movieId;
   final String movieTitle;
+  final List<String> castList;
 
   const CinemaListScreen({
     super.key,
@@ -18,6 +19,7 @@ class CinemaListScreen extends StatefulWidget {
     required this.cinemas,
     required this.movieId,
     required this.movieTitle,
+    required this.castList,
   });
 
   @override
@@ -171,6 +173,7 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
                                                     widget.cityName,
                                             dateTime:
                                                 "$selectedDayAndDate - $time",
+                                            castList: widget.castList,
                                           ),
                                         ),
                                       );

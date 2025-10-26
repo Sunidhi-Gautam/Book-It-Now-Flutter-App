@@ -13,6 +13,7 @@ class TicketPage extends StatefulWidget {
   final String showTime;
   final List<String> selectedSeats;
   final int totalPrice;
+  final List<String> castList;
 
   const TicketPage({
     super.key,
@@ -23,6 +24,7 @@ class TicketPage extends StatefulWidget {
     required this.showTime,
     required this.selectedSeats,
     required this.totalPrice,
+    required this.castList,
   });
 
   @override
@@ -263,6 +265,7 @@ class _TicketPageState extends State<TicketPage> {
               'posterUrl': posterUrl ?? '',
               'bookingId': bookingId,
               'reviewed': false,
+              'castList': widget.castList,
             });
 
             Navigator.push(
