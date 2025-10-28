@@ -9,9 +9,11 @@ import '../components/homepage/topCarousel.dart';
 import '../components/homepage/upcomingMovies.dart';
 import '../models/constants.dart';
 import 'booking_store.dart';
+import 'credits_page.dart'; 
 import 'siginPage.dart';
 import 'my_bookings.dart';
 import '../services/wallet_manager.dart';
+import '../services/credits_manager.dart'; 
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -51,7 +53,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 15, 14, 14),
-      drawer: const AppDrawer(),
+      drawer: const AppDrawer(), 
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 96, 4, 4),
         automaticallyImplyLeading: false,
@@ -103,6 +105,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ],
             ),
             const Spacer(),
+            
             Icon(Iconsax.search_normal, color: kPrimaryColor),
             const SizedBox(width: 12),
             Icon(Iconsax.scan_barcode, color: kPrimaryColor),
@@ -132,6 +135,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
 // Location Selection Dialog
 // ------------------------
 class LocationDialog extends StatelessWidget {
+  
   final String currentLocation;
   const LocationDialog({super.key, required this.currentLocation});
 
@@ -164,6 +168,7 @@ class LocationDialog extends StatelessWidget {
 // Drawer with Firebase User Info
 // ------------------------
 class AppDrawer extends StatelessWidget {
+ 
   const AppDrawer({super.key});
 
   @override
@@ -205,12 +210,10 @@ class AppDrawer extends StatelessWidget {
                   ),
                 ),
               ),
-
               StreamBuilder<double>(
                 stream: WalletManager.getBalanceStream(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    // Show a loading indicator while fetching the balance
                     return const ListTile(
                       leading: Icon(Iconsax.wallet_3, color: Colors.grey),
                       title: Text('My Wallet'),
@@ -221,10 +224,7 @@ class AppDrawer extends StatelessWidget {
                       ),
                     );
                   }
-
-                  // Format and display the balance once it's loaded
                   final balance = snapshot.data?.toStringAsFixed(2) ?? '0.00';
-
                   return ListTile(
                     leading: const Icon(Iconsax.wallet_3, color: Colors.white),
                     title: Text(
@@ -233,7 +233,7 @@ class AppDrawer extends StatelessWidget {
                           fontFamily: primaryFont, color: Colors.white),
                     ),
                     trailing: Text(
-                      '₹$balance', // Displaying with a currency symbol
+                      '₹$balance',
                       style: TextStyle(
                         fontFamily: primaryFont,
                         color: Colors.white,
@@ -244,26 +244,53 @@ class AppDrawer extends StatelessWidget {
                   );
                 },
               ),
-              const Divider(),
-
-              // --- NEW: 'Add Credits' Button ---
+              StreamBuilder<int>(
+                stream: CreditsManager.getCreditsStream(),
+                builder: (context, snapshot) {
+                  final credits = snapshot.data ?? 0;
+                  return ListTile(
+                    leading: Icon(Iconsax.coin_1, color: Colors.yellow[600]),
+                    title: Text(
+                      'My Credits',
+                      style: TextStyle(
+                          fontFamily: primaryFont, color: Colors.white),
+                    ),
+                    trailing: Text(
+                      '🪙 $credits',
+                      style: TextStyle(
+                        fontFamily: primaryFont,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    onTap: () {
+                      Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CreditsPage()),
+                      );
+                    },
+                  );
+                },
+              ),
+              const Divider(color: Colors.white),
               ListTile(
                 leading: const Icon(Iconsax.wallet_add_1,
                     color: Color.fromARGB(255, 166, 243, 172)),
                 title: Text(
-                  'Add Money',
+                  'Add Money to Wallet',
                   style:
                       TextStyle(fontFamily: primaryFont, color: Colors.white),
                 ),
                 onTap: () {
-                  _showAddCreditsDialog(context);
+                  _showAddMoneyDialog(context);
                 },
               ),
-
               const Divider(
                 color: Colors.white,
               ),
-
               ListTile(
                 leading: const Icon(Iconsax.ticket,
                     color: Color.fromARGB(255, 243, 172, 166)),
@@ -285,7 +312,6 @@ class AppDrawer extends StatelessWidget {
               const Divider(
                 color: Colors.white,
               ),
-
               ListTile(
                 leading: const Icon(Iconsax.logout,
                     color: Color.fromARGB(255, 243, 172, 166)),
@@ -310,19 +336,18 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  // --- NEW: Dialog to Add Credits ---
-  void _showAddCreditsDialog(BuildContext context) {
+  void _showAddMoneyDialog(BuildContext context) {
     final TextEditingController _amountController = TextEditingController();
 
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Credits'),
+        title: const Text('Add Money to Wallet'),
         content: TextField(
           controller: _amountController,
           keyboardType: TextInputType.number,
           decoration: const InputDecoration(
-            labelText: 'Amount',
+            labelText: 'Amount (₹)',
             hintText: 'Enter amount to add',
           ),
         ),
@@ -338,17 +363,16 @@ class AppDrawer extends StatelessWidget {
 
               if (amount != null && amount > 0) {
                 final success = await WalletManager.addCredits(amount);
-                Navigator.pop(context); // Close the dialog
+                Navigator.pop(context);
 
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(success
                         ? '₹$amount added to your wallet!'
-                        : 'Failed to add credits. Please try again.'),
+                        : 'Failed to add money. Please try again.'),
                   ),
                 );
               } else {
-                // Show error if input is invalid
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(content: Text('Please enter a valid amount.')),
                 );

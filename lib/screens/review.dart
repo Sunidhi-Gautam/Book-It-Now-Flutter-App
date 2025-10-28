@@ -1,7 +1,13 @@
+// lib/screens/review_page.dart
+
 // ignore_for_file: deprecated_member_use
 
 import 'dart:ui';
 import 'package:flutter/material.dart';
+// Firebase imports
+import 'package:cloud_firestore/cloud_firestore.dart'; 
+import 'package:firebase_auth/firebase_auth.dart'; 
+import '../services/credits_manager.dart'; 
 import 'booking_store.dart';
 
 class ReviewPage extends StatefulWidget {
@@ -38,8 +44,9 @@ class _ReviewPageState extends State<ReviewPage> {
   String _expectation = "Select";
   final TextEditingController _commentsController = TextEditingController();
   int _credits = 0;
-  final int _earnedCredits = 50;
+  final int _earnedCredits = 100; // Each review gives 100 credits
   bool _showPopup = false;
+  bool _isLoading = false; // To manage loading state
 
   final List<String> _storyoptions = [
     'Select',
@@ -100,7 +107,9 @@ class _ReviewPageState extends State<ReviewPage> {
     _credits = widget.initialCredits;
   }
 
-  void _submitReview() {
+  // --- NEW: UPDATED SUBMIT FUNCTION ---
+  Future<void> _submitReview() async {
+    // 1. Validation
     if (_rating == 0 ||
         _story == "Select" ||
         _acting == "Select" ||
@@ -117,11 +126,62 @@ class _ReviewPageState extends State<ReviewPage> {
     }
 
     setState(() {
-      _showPopup = true;
-      _credits += _earnedCredits;
+      _isLoading = true; // Show loading
     });
 
-    BookingStore.bookings[widget.bookingIndex]['reviewed'] = true;
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("You are not logged in.")),
+        );
+        setState(() => _isLoading = false);
+        return;
+      }
+
+      // 2. Create a Review object
+      final reviewData = {
+        'movieId': widget.movieId,
+        'movieTitle': widget.movieTitle,
+        'userId': user.uid,
+        'createdAt': FieldValue.serverTimestamp(),
+        'rating': _rating,
+        'story': _story,
+        'acting': _acting,
+        'visuals': _visuals,
+        'music': _music,
+        'recommendTo': _recommendTo,
+        'emoji': _favoriteEmoji,
+        'favoriteCharacter': _favoriteCharacter,
+        'expectation': _expectation,
+        'comments': _commentsController.text,
+      };
+
+      // 3. Save the review to Firebase
+      await FirebaseFirestore.instance.collection('reviews').add(reviewData);
+
+      // 4. Award credits using your manager
+      await CreditsManager.addCredits(_earnedCredits);
+
+      // 5. Update local BookingStore (as before)
+      BookingStore.bookings[widget.bookingIndex]['reviewed'] = true;
+
+      // 6. Show the success popup
+      setState(() {
+        _showPopup = true;
+        _credits += _earnedCredits; // Update local display
+      });
+
+    } catch (e) {
+      // Show error if Firebase fails
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to submit review: $e")),
+      );
+    } finally {
+      setState(() {
+        _isLoading = false; // Hide loading
+      });
+    }
   }
 
   @override
@@ -254,7 +314,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 const SizedBox(height: 20),
                 Center(
                   child: ElevatedButton(
-                    onPressed: _submitReview,
+                    onPressed: _isLoading ? null : _submitReview, // Disable on load
                     style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                             horizontal: 150, vertical: 18),
@@ -264,7 +324,9 @@ class _ReviewPageState extends State<ReviewPage> {
                             .withOpacity(0.8),
                         shadowColor: Colors.black,
                         elevation: 10),
-                    child: const Text("Submit",
+                    child: _isLoading 
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text("Submit",
                         style: TextStyle(
                             fontSize: 20,
                             color: Colors.white,
@@ -489,7 +551,7 @@ class _ReviewPageState extends State<ReviewPage> {
                       setState(() {
                         _showPopup = false;
                       });
-                      Navigator.pop(context, true);
+                      Navigator.pop(context, true); // Pop back after success
                     },
                     child:
                         const Icon(Icons.close, color: Colors.white, size: 28),
@@ -508,7 +570,7 @@ class _ReviewPageState extends State<ReviewPage> {
                 ),
                 const SizedBox(height: 10),
                 Text(
-                  "You earned $_earnedCredits credit points.",
+                  "You earned $_earnedCredits credit points.", 
                   textAlign: TextAlign.center,
                   style: const TextStyle(color: Colors.white70, fontSize: 18),
                 ),

@@ -6,7 +6,7 @@ class WalletManager {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // This helper function is good, no changes needed here.
+  
   static DocumentReference? get _userDocRef {
     final user = _auth.currentUser;
     if (user == null) return null;
@@ -26,6 +26,7 @@ class WalletManager {
         'username': username,
         'walletBalance': 1000.0, // Starting balance
         'createdAt': FieldValue.serverTimestamp(),
+        'credits': 500, // Starting credits
       });
     }
   }
@@ -42,7 +43,7 @@ class WalletManager {
     });
   }
 
-  // --- NEW: Method to add credits to the wallet ---
+  // Adds credits to the user's wallet
   static Future<bool> addCredits(double amount) async {
     final docRef = _userDocRef;
     if (docRef == null || amount <= 0) {
