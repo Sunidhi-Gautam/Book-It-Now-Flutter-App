@@ -85,6 +85,9 @@ flutter:
      - assets/images/mumbai.png 
      - assets/images/chennai.png
      - assets/images/kolkata.png
+     - assets/images/seat_views/
+     
+
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

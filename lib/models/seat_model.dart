@@ -6,6 +6,7 @@ class SeatModel {
   final SeatState seatState;
   final int seatSvgSize;
   final String pathSelectedSeat;
+  final String pathPreviewSeat;
   final String pathUnSelectedSeat;
   final String pathSoldSeat;
   final String pathDisabledSeat;
@@ -15,6 +16,7 @@ class SeatModel {
     required this.colI,
     required this.seatState,
     required this.pathSelectedSeat,
+    required this.pathPreviewSeat,
     required this.pathUnSelectedSeat,
     required this.pathSoldSeat,
     required this.pathDisabledSeat,

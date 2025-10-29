@@ -19,42 +19,138 @@ class SeatWidget extends StatefulWidget {
   State<SeatWidget> createState() => _SeatWidgetState();
 }
 
-class _SeatWidgetState extends State<SeatWidget> {
+class _SeatWidgetState extends State<SeatWidget>
+    with SingleTickerProviderStateMixin {
   late SeatState seatState;
+  late AnimationController _glowController;
+  late Animation<double> _glowAnimation;
 
   @override
   void initState() {
     super.initState();
     seatState = widget.model.seatState;
+
+    // ✨ Setup pulsing glow animation
+    _glowController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              _glowController.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              _glowController.forward();
+            }
+          });
+
+    _glowAnimation =
+        Tween<double>(begin: 0.7, end: 1.2).animate(CurvedAnimation(
+      parent: _glowController,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start glow if seat was already selected
+    if (seatState == SeatState.selected) {
+      _glowController.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _glowController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final seatSize = widget.model.seatSvgSize.toDouble();
+
     return GestureDetector(
       onTap: () {
-        if (seatState == SeatState.unselected) {
-          setState(() => seatState = SeatState.selected);
-        } else if (seatState == SeatState.selected) {
-          setState(() => seatState = SeatState.unselected);
-        } else {
-          return; // sold or disabled cannot be tapped
-        }
+        setState(() {
+          // --- Seat Tap Behavior ---
+          if (seatState == SeatState.unselected) {
+            seatState = SeatState.selected;
+          } else if (seatState == SeatState.selected) {
+            seatState = SeatState.unselected;
+          }
+
+          // Control glow animation based on state
+          if (seatState == SeatState.selected) {
+            _glowController.forward();
+          } else {
+            _glowController.stop();
+          }
+        });
+
         widget.onSeatStateChanged(
-            widget.model.rowI, widget.model.colI, seatState);
+          widget.model.rowI,
+          widget.model.colI,
+          seatState,
+        );
       },
-      child: seatState != SeatState.empty
-          ? SvgPicture.asset(
-              _getSvgForSeat(seatState),
-              width: widget.model.seatSvgSize.toDouble(),
-              height: widget.model.seatSvgSize.toDouble(),
-            )
-          : SizedBox(
-              width: widget.model.seatSvgSize.toDouble(),
-              height: widget.model.seatSvgSize.toDouble(),
+      child: AnimatedBuilder(
+        animation: _glowController,
+        builder: (context, _) {
+          bool isSelected = seatState == SeatState.selected;
+        
+
+          return Container(
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              boxShadow: isSelected
+                  ? [
+                      // Strong glowing red effect for selected
+                      BoxShadow(
+                        color: Colors.redAccent.withOpacity(0.9),
+                        blurRadius: 30 * _glowAnimation.value,
+                        spreadRadius: 10 * _glowAnimation.value,
+                      ),
+                      BoxShadow(
+                        color: Colors.redAccent.withOpacity(0.4),
+                        blurRadius: 60 * _glowAnimation.value,
+                        spreadRadius: 20 * _glowAnimation.value,
+                      ),
+                    ]
+                  
+                      : null,
             ),
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // 🪑 Seat SVG based on its state
+                SvgPicture.asset(
+                  _getSvgForSeat(seatState),
+                  width: seatSize,
+                  height: seatSize,
+                ),
+
+                // ✨ Light overlay for glowing shine (selected only)
+                if (isSelected)
+                  Opacity(
+                    opacity: 0.6,
+                    child: Container(
+                      width: seatSize,
+                      height: seatSize,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: RadialGradient(
+                          colors: [
+                            Colors.redAccent.withOpacity(0.6),
+                            Colors.transparent,
+                          ],
+                          radius: 0.8,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
+  // 🖼️ SVG Paths for different seat states
   String _getSvgForSeat(SeatState state) {
     switch (state) {
       case SeatState.selected:

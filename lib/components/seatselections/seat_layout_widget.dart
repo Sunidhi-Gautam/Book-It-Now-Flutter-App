@@ -1,6 +1,5 @@
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
-
 import 'seat_widget.dart';
 
 
@@ -37,6 +36,7 @@ class SeatLayoutWidget extends StatelessWidget {
                     pathUnSelectedSeat: stateModel.pathUnSelectedSeat,
                     pathSoldSeat: stateModel.pathSoldSeat,
                     pathDisabledSeat: stateModel.pathDisabledSeat,
+                    
                   ),
                   onSeatStateChanged: onSeatStateChanged,
                 ),

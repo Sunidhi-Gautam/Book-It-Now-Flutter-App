@@ -5,6 +5,7 @@ import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 // Assuming 'constants.dart' defines kPrimaryColorColor
+import '../components/seatselections/seat_preview_modal.dart';
 import '../models/constants.dart';
 import '../services/booking_service.dart';
 import 'ticket_generate.dart';
@@ -18,7 +19,25 @@ int _getPriceByRowIndex(int absoluteRowIndex) {
   if (absoluteRowIndex >= 8 && absoluteRowIndex <= 9) return _pricePrime;
   return 0;
 }
-// ----------------------------
+// --- GENERAL COMMENTS BASED ON SEAT SECTIONS ---
+final Map<String, String> generalSeatComments = {
+  'front':
+      'Front rows offer an immersive experience but can be too close for some viewers. Great for action lovers.',
+  'middle':
+      'Middle rows provide the best balance of sound and visuals — ideal for a comfortable viewing experience.',
+  'back':
+      'Back rows are perfect for a relaxed, panoramic view and less crowding, though the screen appears smaller.',
+};
+
+// --- SPECIFIC COMMENTS FOR PARTICULAR SEATS (optional, extendable) ---
+final Map<String, String> seatSpecificComments = {
+  'A1': 'Very close to the screen — best for full immersion.',
+  'B5': 'Slightly off-center but still gives a good view.',
+  'E6': 'Perfectly centered seat with great sound balance.',
+  'H10': 'Near the aisle — good for quick exits.',
+  'J3': 'Top row, minimal disturbance and best privacy.',
+};
+
 
 class SeatSelectionScreen extends StatefulWidget {
   final int movieId;
@@ -64,6 +83,9 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       _totalPrice = total;
     });
   }
+
+  
+
 
   // 💡 FIX: Updated parsing logic to handle "Cinema Name, City Name (Day, Date - Time)"
   Map<String, String> _parseBookingDetails() {
@@ -427,74 +449,119 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                 ],
               ),
 
-              const SizedBox(height: 20),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    legendItem(
-                        'Disabled', 'assets/images/svg_disabled_bus_seat.svg'),
-                    legendItem('Sold', 'assets/images/svg_sold_bus_seat.svg'),
-                    legendItem('Available',
-                        'assets/images/svg_unselected_bus_seat.svg'),
-                    legendItem('Selected by you',
-                        'assets/images/svg_selected_bus_seats.svg'),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 15),
-
-              Text(
-                'Selected Seats: ${selectedSeats.isEmpty ? "None" : selectedSeats.map((s) => s.toSeatString(_getRowLabel)).join(" , ")}',
-                style: const TextStyle(fontSize: 14, color: Colors.white70),
-              ),
-              const SizedBox(height: 10),
-
-              // --- BUTTON DYNAMICALLY SHOWS PRICE ---
-
-              ElevatedButton(
-                onPressed: (_totalPrice > 0 && !_isProcessing)
-                    ? _handleBooking
-                    : null, // Call the handler
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: kPrimaryColor,
-                  disabledBackgroundColor: Colors.grey,
-                  shadowColor: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                child: _isProcessing
-                    ? const SizedBox(
-                        // Show a spinner when processing
-                        width: 24,
-                        height: 24,
-                        child: CircularProgressIndicator(
-                          color: Colors.white,
-                          strokeWidth: 3,
-                        ),
-                      )
-                    : Text(
-                        // Show regular text otherwise
-                        _totalPrice > 0
-                            ? 'Proceed to Pay Rs. $_totalPrice'
-                            : 'Select Seats to Proceed',
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16),
-                      ),
-              ),
-
-              const SizedBox(height: 25),
+    const SizedBox(height: 20),
+    Padding(
+      padding:
+          const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              legendItem('Disabled', 'assets/images/svg_disabled_bus_seat.svg'),
+              legendItem('Sold', 'assets/images/svg_sold_bus_seat.svg'),
+              legendItem('Available', 'assets/images/svg_unselected_bus_seat.svg'),
+              legendItem('Selected', 'assets/images/svg_selected_bus_seats.svg'),
             ],
           ),
-        ),
+          const SizedBox(height: 10),
+
+          Text(
+            'Selected Seats: ${selectedSeats.isEmpty ? "None" : selectedSeats.map((s) => s.toSeatString(_getRowLabel)).join(" , ")}',
+            style: const TextStyle(fontSize: 14, color: Colors.white70),
+          ),
+          const SizedBox(height: 10),
+
+          // --- BUTTON DYNAMICALLY SHOWS PRICE ---
+
+          ElevatedButton(
+            onPressed: (_totalPrice > 0 && !_isProcessing)
+                ? _handleBooking
+                : null, // Call the handler
+            style: ElevatedButton.styleFrom(
+              backgroundColor: kPrimaryColor,
+              disabledBackgroundColor: Colors.grey,
+              shadowColor: Colors.white,
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            child: _isProcessing
+                ? const SizedBox(
+                    // Show a spinner when processing
+                    width: 24,
+                    height: 24,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 3,
+                    ),
+                  )
+                : Text(
+                    // Show regular text otherwise
+                    _totalPrice > 0
+                        ? 'Proceed to Pay Rs. $_totalPrice'
+                        : 'Select Seats to Proceed',
+                    style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+          ),
+
+          const SizedBox(height: 25),
+        ],
       ),
+            ),
+          ],
+        ),
+      ),),
+    );
+  }
+
+
+// --- DETERMINE SEAT SECTION ---
+  String _getSeatSection(String seatLabel) {
+    final row = seatLabel[0].toUpperCase();
+    if (['A', 'B', 'C', 'D'].contains(row)) return 'front';
+    if (['E', 'F', 'G', 'H'].contains(row)) return 'middle';
+    if (['I', 'J'].contains(row)) return 'back';
+    return 'middle';
+  }
+
+  // --- SHOW SEAT PREVIEW MODAL ---
+  void _showSeatPreviewModal(
+    BuildContext context,
+    String seatLabel,
+    int seatPrice,
+    VoidCallback onSelect,
+  ) {
+    final seatSection = _getSeatSection(seatLabel);
+    final generalComment =
+        generalSeatComments[seatSection] ?? 'General seating info unavailable.';
+    final seatComment =
+        seatSpecificComments[seatLabel] ?? generalComment; // fallback to general
+ 
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (ctx) {
+        return SeatPreviewModal(
+          seatLabel: seatLabel,
+          seatComment: seatComment,
+          
+          // 👆 keep your seat view images named like A1.jpg, B3.jpg, etc.
+          onSelectSeat: () {
+            Navigator.pop(ctx); // close modal
+            onSelect(); // actually select seat
+          },
+          onClose: () {
+            Navigator.pop(ctx); // just close modal
+          },
+        );
+      },
     );
   }
 
@@ -532,20 +599,31 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               child: SeatLayoutWidget(
                 onSeatStateChanged: (localRowI, colI, seatState) {
                   final seatPrice = _getPriceByRowIndex(absoluteRowIndex);
-                  final seatNumber = SeatNumber(
-                    rowI: absoluteRowIndex,
-                    colI: colI,
-                    price: seatPrice,
-                  );
-
-                  if (seatState == SeatState.selected) {
-                    selectedSeats.add(seatNumber);
-                  } else {
-                    selectedSeats.remove(seatNumber);
-                  }
-
-                  _calculateTotalPrice();
-                },
+  final seatLabel = '${_getRowLabel(absoluteRowIndex)}${colI + 1}';
+  final seatNumber = SeatNumber(
+    rowI: absoluteRowIndex,
+    colI: colI,
+    price: seatPrice,
+  );              if (seatState == SeatState.selected) {
+    _showSeatPreviewModal(
+      context,
+      seatLabel,
+      seatPrice,
+      () {
+        setState(() {
+          selectedSeats.add(seatNumber);
+          _calculateTotalPrice();
+        });
+      },
+    );
+  } else {
+    // ❌ Don't open modal when deselecting — just remove the seat
+    setState(() {
+      selectedSeats.remove(seatNumber);
+      _calculateTotalPrice();
+    });
+  }
+},
                 stateModel: SeatLayoutStateModel(
                   currentSeatsState: [seatStates[rowIndex]],
                   pathDisabledSeat: 'assets/images/svg_disabled_bus_seat.svg',
