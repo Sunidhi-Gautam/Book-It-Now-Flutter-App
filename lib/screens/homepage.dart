@@ -8,12 +8,11 @@ import '../components/homepage/newRelases.dart';
 import '../components/homepage/topCarousel.dart';
 import '../components/homepage/upcomingMovies.dart';
 import '../models/constants.dart';
-import 'booking_store.dart';
-import 'credits_page.dart'; 
+import 'credits_page.dart';
 import 'siginPage.dart';
 import 'my_bookings.dart';
 import '../services/wallet_manager.dart';
-import '../services/credits_manager.dart'; 
+import '../services/credits_manager.dart';
 
 class HomePageScreen extends StatefulWidget {
   const HomePageScreen({super.key});
@@ -53,7 +52,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 15, 14, 14),
-      drawer: const AppDrawer(), 
+      drawer: const AppDrawer(),
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 96, 4, 4),
         automaticallyImplyLeading: false,
@@ -105,7 +104,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
               ],
             ),
             const Spacer(),
-            
             Icon(Iconsax.search_normal, color: kPrimaryColor),
             const SizedBox(width: 12),
             Icon(Iconsax.scan_barcode, color: kPrimaryColor),
@@ -135,7 +133,6 @@ class _HomePageScreenState extends State<HomePageScreen> {
 // Location Selection Dialog
 // ------------------------
 class LocationDialog extends StatelessWidget {
-  
   final String currentLocation;
   const LocationDialog({super.key, required this.currentLocation});
 
@@ -168,7 +165,6 @@ class LocationDialog extends StatelessWidget {
 // Drawer with Firebase User Info
 // ------------------------
 class AppDrawer extends StatelessWidget {
- 
   const AppDrawer({super.key});
 
   @override
@@ -304,8 +300,8 @@ class AppDrawer extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) =>
-                            MyBookingsPage(bookings: BookingStore.bookings)),
+                      builder: (context) => const MyBookingsPage(),
+                    ),
                   );
                 },
               ),
