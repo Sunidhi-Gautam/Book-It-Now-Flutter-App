@@ -3,6 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
 import '../../models/constants.dart';
 import '../../models/movie_model.dart';
+import '../../screens/movie_detail_screen.dart'; //movie detail screen fetch krne k liye
 
 class UpcomingMovies extends StatefulWidget {
   const UpcomingMovies({super.key});
@@ -66,15 +67,30 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: Image.network(
-                                "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                                height: 170,
-                                width: 120,
-                                fit: BoxFit.cover,
+                            //---------movie detail screen on tap code-----------
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MovieDetailScreen(
+                                      movieId: movie.id, 
+                                      movieTitle: movie.title,
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                                  height: 170,
+                                  width: 120,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
+                            //------------new code for on tap to movie detail screen----------------
                             const SizedBox(height: 5),
                             SizedBox(
                               width: 120,

@@ -5,6 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
 import '../../models/movie_model.dart';
 import '../../screens/new_releases_screen.dart';
+import '../../screens/movie_detail_screen.dart'; //movie detail screen fetch krne k liye
 
 class NewReleases extends StatefulWidget {
   const NewReleases({super.key});
@@ -80,16 +81,45 @@ class _NewReleasesState extends State<NewReleases> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Poster
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                                  height: 180,
-                                  width: 150,
-                                  fit: BoxFit.cover,
+                              //------------new code for on tap to movie detail screen----------------
+                              // // Poster
+                              // ClipRRect(
+                              //   borderRadius: BorderRadius.circular(10),
+                              //   child: Image.network(
+                              //     "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                              //     height: 180,
+                              //     width: 150,
+                              //     fit: BoxFit.cover,
+                              //   ),
+                              // ),
+
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      // Pass the ID and title, not the whole object
+                                      builder: (context) => MovieDetailScreen(
+                                        movieId: movie.id, // Assuming your model has 'id'
+                                        movieTitle: movie.title,
+                                      ),
+                                      // --------------------------
+                                    ),
+                                  );
+                                },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                    "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                                    height: 180,
+                                    width: 150,
+                                    fit: BoxFit.cover,
+                                  ),
                                 ),
                               ),
+
+
+                              //------------new code for on tap to movie detail screen----------------
                               const SizedBox(height: 5),
                               // Title
                               Text(

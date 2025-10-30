@@ -149,7 +149,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     );
   }
 
-  // bookings
+  //bookings
 
   Future<void> _handleBooking() async {
     if (selectedSeats.isEmpty) return;
@@ -195,7 +195,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     _nextRowLabelIndex = 0;
