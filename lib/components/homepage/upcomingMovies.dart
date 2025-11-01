@@ -33,11 +33,10 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
             Text(
               "Upcoming Movies 🎞️",
               style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                fontFamily: secondaryFonts,
-                color: Colors.white
-              ),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: secondaryFonts,
+                  color: Colors.white),
             ),
             const SizedBox(height: 10),
             Expanded(
@@ -45,20 +44,24 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                 future: upcomingMovies,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: LoadingAnimationWidget.waveDots(
-              color: const Color.fromARGB(158, 255, 255, 255),
-              size: 50, // Adjust size if needed
-            ),);
+                    return Center(
+                      child: LoadingAnimationWidget.waveDots(
+                        color: const Color.fromARGB(158, 255, 255, 255),
+                        size: 50, // Adjust size if needed
+                      ),
+                    );
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return const Center(child: Text("No upcoming movies found"));
+                    return const Center(
+                        child: Text("No upcoming movies found"));
                   }
 
                   final movies = snapshot.data!;
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.only(bottom: 20), // bottom padding
+                    padding:
+                        const EdgeInsets.only(bottom: 20), // bottom padding
                     itemCount: movies.length,
                     itemBuilder: (_, index) {
                       final movie = movies[index];
@@ -74,7 +77,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => MovieDetailScreen(
-                                      movieId: movie.id, 
+                                      movieId: movie.id,
                                       movieTitle: movie.title,
                                     ),
                                   ),
@@ -98,11 +101,10 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                                 movie.title,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: secondaryFonts,
-                                  color: Colors.white 
-                                                               ),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: secondaryFonts,
+                                    color: Colors.white),
                                 softWrap: true,
                                 maxLines: 2, // limits to 2 lines
                                 overflow: TextOverflow.ellipsis,

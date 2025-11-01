@@ -37,19 +37,29 @@ class _NewReleasesState extends State<NewReleases> {
           children: [
             Row(
               children: [
-               Text("New Releases ✨",
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.bold, fontFamily: secondaryFonts, color: Colors.white)),
+                Text("New Releases ✨",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: secondaryFonts,
+                        color: Colors.white)),
                 const Spacer(),
                 TextButton(
-                   onPressed: () {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const NewReleasesScreen()),
-    );
-  },
-  child: Text("View All", style: TextStyle(color: const Color.fromARGB(255, 241, 185, 181), fontSize: 15, fontFamily: subtitleFonts), ),
-),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const NewReleasesScreen()),
+                    );
+                  },
+                  child: Text(
+                    "View All",
+                    style: TextStyle(
+                        color: const Color.fromARGB(255, 241, 185, 181),
+                        fontSize: 15,
+                        fontFamily: subtitleFonts),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -58,10 +68,12 @@ class _NewReleasesState extends State<NewReleases> {
                 future: futureMovies,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: LoadingAnimationWidget.waveDots(
-              color: const Color.fromARGB(158, 255, 255, 255),
-              size: 50, // Adjust size if needed
-            ),);
+                    return Center(
+                      child: LoadingAnimationWidget.waveDots(
+                        color: const Color.fromARGB(158, 255, 255, 255),
+                        size: 50, // Adjust size if needed
+                      ),
+                    );
                   } else if (snapshot.hasError) {
                     return Center(child: Text("Error: ${snapshot.error}"));
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -100,7 +112,8 @@ class _NewReleasesState extends State<NewReleases> {
                                     MaterialPageRoute(
                                       // Pass the ID and title, not the whole object
                                       builder: (context) => MovieDetailScreen(
-                                        movieId: movie.id, // Assuming your model has 'id'
+                                        movieId: movie
+                                            .id, // Assuming your model has 'id'
                                         movieTitle: movie.title,
                                       ),
                                       // --------------------------
@@ -118,7 +131,6 @@ class _NewReleasesState extends State<NewReleases> {
                                 ),
                               ),
 
-
                               //------------new code for on tap to movie detail screen----------------
                               const SizedBox(height: 5),
                               // Title
@@ -127,11 +139,10 @@ class _NewReleasesState extends State<NewReleases> {
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  fontFamily: secondaryFonts,
-                                  color: Colors.white
-                                ),
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold,
+                                    fontFamily: secondaryFonts,
+                                    color: Colors.white),
                               ),
                               const SizedBox(height: 3),
                               // Rating
@@ -140,7 +151,8 @@ class _NewReleasesState extends State<NewReleases> {
                                   RatingBarIndicator(
                                     rating: movie.rating / 2,
                                     itemBuilder: (_, __) => const Icon(
-                                        Icons.star, color: Colors.amber),
+                                        Icons.star,
+                                        color: Colors.amber),
                                     itemSize: 15,
                                   ),
                                   const SizedBox(width: 5),

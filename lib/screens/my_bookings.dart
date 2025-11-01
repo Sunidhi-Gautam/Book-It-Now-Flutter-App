@@ -1,4 +1,4 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, unused_local_variable
 
 import 'package:flutter/material.dart';
 import 'homepage.dart';
@@ -245,61 +245,185 @@ class BookingDetailsSheet extends StatelessWidget {
             const SizedBox(height: 18),
 
             // Review Button Logic
+            // SizedBox(
+            //   width: double.infinity,
+            //   child: ElevatedButton(
+            //     style: ButtonStyle(
+            //       backgroundColor: MaterialStateProperty.resolveWith<Color>(
+            //         (states) {
+            //           if (states.contains(MaterialState.disabled)) {
+            //             return Colors.grey; // color when disabled
+            //           }
+            //           return const Color.fromARGB(
+            //               255, 139, 0, 0); // normal color
+            //         },
+            //       ),
+            //       padding: MaterialStateProperty.all(
+            //           const EdgeInsets.symmetric(vertical: 14)),
+            //       shape: MaterialStateProperty.all(
+            //         RoundedRectangleBorder(
+            //           borderRadius: BorderRadius.circular(14),
+            //         ),
+            //       ),
+            //     ),
+            //     // SizedBox(
+            //     onPressed: () async {
+            //       // ignore: unused_local_variable
+            //       final result = await Navigator.push(
+            //         context,
+            //         MaterialPageRoute(
+            //           builder: (context) => ReviewPage(
+            //             bookingId: booking['bookingId'],
+            //           ),
+            //         ),
+            //       );
+            //       if (result == true) {
+            //         final user = FirebaseAuth.instance.currentUser;
+            //         if (user != null) {
+            //           await FirebaseFirestore.instance
+            //               .collection('users')
+            //               .doc(user.uid)
+            //               .collection('bookings')
+            //               .doc(bookingId)
+            //               .update({'reviewed': true});
+            //         }
+            //         Navigator.pop(context);
+            //       }
+            //     },
+            //     child: Text(
+            //       booking['reviewed'] == true ? "Reviewed" : "Review",
+            //       style: const TextStyle(
+            //         fontSize: 16,
+            //         fontWeight: FontWeight.bold,
+            //         color: Colors.white,
+            //       ),
+            //     ),
+            //   ),
+            // ),
+
+            // --- Review Button Logic (Enhanced) ---
             SizedBox(
               width: double.infinity,
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                    (states) {
-                      if (states.contains(MaterialState.disabled)) {
-                        return Colors.grey; // color when disabled
+              child: Builder(
+                builder: (context) {
+                  DateTime? showTime;
+
+                  // Handle Firestore Timestamp or String
+                  final rawTime = booking['showTime'];
+                  if (rawTime is Timestamp) {
+                    showTime = rawTime.toDate();
+                  } else if (rawTime is String) {
+                    try {
+                      // Example: "Fri, Oct 31 - 1:00 PM"
+                      final regex = RegExp(
+                          r'([A-Za-z]{3}), ([A-Za-z]{3}) (\d{1,2}) - (\d{1,2}):(\d{2}) ([APMapm]{2})');
+                      final match = regex.firstMatch(rawTime);
+
+                      if (match != null) {
+                        final monthAbbrev = match.group(2)!; // Oct
+                        final day = int.parse(match.group(3)!); // 31
+                        final hour = int.parse(match.group(4)!); // 1
+                        final minute = int.parse(match.group(5)!); // 00
+                        final period = match.group(6)!.toUpperCase(); // PM
+
+                        // Map short month to number
+                        const months = {
+                          'Jan': 1,
+                          'Feb': 2,
+                          'Mar': 3,
+                          'Apr': 4,
+                          'May': 5,
+                          'Jun': 6,
+                          'Jul': 7,
+                          'Aug': 8,
+                          'Sep': 9,
+                          'Oct': 10,
+                          'Nov': 11,
+                          'Dec': 12
+                        };
+                        final month = months[monthAbbrev] ?? 1;
+
+                        // Adjust 12-hour to 24-hour format
+                        int hour24 = hour % 12;
+                        if (period == 'PM') hour24 += 12;
+
+                        // Use current year
+                        final now = DateTime.now();
+                        showTime =
+                            DateTime(now.year, month, day, hour24, minute);
                       }
-                      return const Color.fromARGB(
-                          255, 139, 0, 0); // normal color
-                    },
-                  ),
-                  padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(vertical: 14)),
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                    } catch (e) {
+                      print('❌ Date parse failed for $rawTime → $e');
+                    }
+                  }
+
+                  final now = DateTime.now();
+                  final hasShowStarted =
+                      showTime != null && now.isAfter(showTime);
+                  final isReviewed = booking['reviewed'] == true;
+
+                  final isButtonEnabled = hasShowStarted;
+
+                  return ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (states) {
+                          if (states.contains(MaterialState.disabled)) {
+                            return Colors.grey; // color when disabled
+                          }
+                          return const Color.fromARGB(
+                              255, 139, 0, 0); // normal color
+                        },
+                      ),
+                      padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(vertical: 14)),
+                      shape: MaterialStateProperty.all(
+                        RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(14),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                // SizedBox(
-                onPressed: () async {
-                  // ignore: unused_local_variable
-                  final result = await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => ReviewPage(
-                        bookingId: booking['bookingId'],
+                    onPressed: isButtonEnabled
+                        ? () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ReviewPage(
+                                  bookingId: booking['bookingId'],
+                                ),
+                              ),
+                            );
+                            if (result == true) {
+                              final user = FirebaseAuth.instance.currentUser;
+                              if (user != null) {
+                                await FirebaseFirestore.instance
+                                    .collection('users')
+                                    .doc(user.uid)
+                                    .collection('bookings')
+                                    .doc(bookingId)
+                                    .update({'reviewed': true});
+                              }
+                              Navigator.pop(context);
+                            }
+                          }
+                        : null,
+                    child: Text(
+                      isReviewed
+                          ? "Reviewed"
+                          : isButtonEnabled
+                              ? "Review"
+                              : "Review (Available after Show)",
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
                       ),
                     ),
                   );
-                  if (result == true) {
-                    final user = FirebaseAuth.instance.currentUser;
-                    if (user != null) {
-                      await FirebaseFirestore.instance
-                          .collection('users')
-                          .doc(user.uid)
-                          .collection('bookings')
-                          .doc(bookingId)
-                          .update({'reviewed': true});
-                    }
-                    Navigator.pop(context);
-                  }
                 },
-                child: Text(
-                  booking['reviewed'] == true ? "Reviewed" : "Review",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
               ),
             ),
+
             const SizedBox(height: 12),
           ],
         ),
