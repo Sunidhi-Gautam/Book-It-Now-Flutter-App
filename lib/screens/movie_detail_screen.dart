@@ -4,6 +4,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../api_services/tmdb_api.dart';
 import '../models/movie_detail_model.dart';
 import 'select_location_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MovieDetailScreen extends StatelessWidget {
   final int movieId;
@@ -29,7 +30,7 @@ class MovieDetailScreen extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
       ),
 
-      // Bottom Buy Ticket button
+      // --- Bottom Proceed Button ---
       bottomNavigationBar: FutureBuilder<MovieDetail>(
         future: ApiService().fetchMovieDetails(movieId),
         builder: (context, snapshot) {
@@ -78,7 +79,7 @@ class MovieDetailScreen extends StatelessWidget {
         },
       ),
 
-      // Movie Detail Body
+      // --- Main Body ---
       body: FutureBuilder<MovieDetail>(
         future: ApiService().fetchMovieDetails(movieId),
         builder: (context, snapshot) {
@@ -102,7 +103,7 @@ class MovieDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Movie Banner
+                // --- Movie Banner ---
                 Image.network(
                   "https://image.tmdb.org/t/p/w500${movie.backdropPath}",
                   height: 200,
@@ -110,7 +111,7 @@ class MovieDetailScreen extends StatelessWidget {
                   fit: BoxFit.cover,
                 ),
 
-                // Title
+                // --- Title ---
                 Padding(
                   padding: const EdgeInsets.all(15.0),
                   child: Text(
@@ -122,7 +123,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Rating
+                // --- Rating ---
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 12.0),
                   child: Row(
@@ -140,7 +141,7 @@ class MovieDetailScreen extends StatelessWidget {
 
                 const SizedBox(height: 10),
 
-                // Overview
+                // --- Overview ---
                 Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Text(
@@ -149,7 +150,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Cast Section
+                // --- Cast Section ---
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
@@ -209,7 +210,7 @@ class MovieDetailScreen extends StatelessWidget {
                   ),
                 ),
 
-                // Reviews Section
+                // --- TMDB Reviews (existing) ---
                 const Padding(
                   padding: EdgeInsets.symmetric(horizontal: 12.0, vertical: 8),
                   child: Text(
@@ -224,14 +225,13 @@ class MovieDetailScreen extends StatelessWidget {
                   const Padding(
                     padding: EdgeInsets.symmetric(horizontal: 12.0),
                     child: Text(
-                      "No reviews yet.",
+                      "",
                       style: TextStyle(color: Colors.white),
                     ),
                   )
                 else
                   ListView.builder(
-                    physics:
-                        const NeverScrollableScrollPhysics(), // To allow inside scroll view
+                    physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: movie.reviews.length,
                     itemBuilder: (_, index) {
@@ -257,8 +257,8 @@ class MovieDetailScreen extends StatelessWidget {
                               const SizedBox(height: 5),
                               Text(
                                 review.content,
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
+                                // maxLines: 6,
+                                // overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(color: Colors.white),
                               ),
                             ],
@@ -267,10 +267,125 @@ class MovieDetailScreen extends StatelessWidget {
                       );
                     },
                   ),
+
+                const SizedBox(height: 6),
+
+                // --- Firebase User Reviews (show username + comments) ---
+                StreamBuilder<QuerySnapshot>(
+                  stream: FirebaseFirestore.instance
+                      .collection('reviews')
+                      .where('movieId', isEqualTo: movie.id)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(
+                        child: CircularProgressIndicator(color: Colors.white),
+                      );
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                      // if no firebase reviews, nothing more to show
+                      return const SizedBox.shrink();
+                    }
+
+                    final firebaseDocs = snapshot.data!.docs;
+
+                    return ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: firebaseDocs.length,
+                      itemBuilder: (context, index) {
+                        final reviewData =
+                            firebaseDocs[index].data() as Map<String, dynamic>;
+                        final userId = reviewData['userId'] as String?;
+                        final comment =
+                            (reviewData['comments'] ?? '').toString();
+
+                        // fetch username from /users/{userId}
+                        return FutureBuilder<DocumentSnapshot>(
+                          future: (userId != null && userId.isNotEmpty)
+                              ? FirebaseFirestore.instance
+                                  .collection('users')
+                                  .doc(userId)
+                                  .get()
+                              // ignore: null_argument_to_non_null_type
+                              : Future.value(null),
+                          builder: (context, userSnapshot) {
+                            String username = 'Anonymous';
+                            if (userSnapshot.hasData &&
+                                userSnapshot.data != null &&
+                                userSnapshot.data!.exists) {
+                              final userData = userSnapshot.data!.data()
+                                  as Map<String, dynamic>?;
+                              if (userData != null) {
+                                username = (userData['username'] ??
+                                        userData['username'] ??
+                                        'Anonymous')
+                                    .toString();
+                              }
+                            }
+
+                            return _ExpandableCommentCard(
+                              username: username,
+                              comment: comment,
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
+                ),
+
+                const SizedBox(height: 12),
               ],
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+/// Firebase user review card — matches TMDB review UI
+class _ExpandableCommentCard extends StatelessWidget {
+  final String username;
+  final String comment;
+
+  const _ExpandableCommentCard({
+    // ignore: unused_element_parameter
+    super.key,
+    required this.username,
+    required this.comment,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      color: const Color.fromARGB(255, 30, 29, 29),
+      shadowColor: const Color.fromARGB(255, 247, 245, 245),
+      margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Username like TMDB Author
+            Text(
+              username,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            const SizedBox(height: 5),
+
+            // Full comment text — no truncation
+            Text(
+              comment.isNotEmpty ? comment : "(No comment)",
+              style: const TextStyle(color: Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }
