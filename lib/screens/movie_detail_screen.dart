@@ -52,7 +52,7 @@ class MovieDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: kPrimaryColor,
+                  backgroundColor: const Color.fromARGB(255, 65, 2, 2),
                   elevation: 5, // slight shadow if you want a floating look
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(

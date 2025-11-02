@@ -51,13 +51,14 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
         DateFormat('EEE, MMM dd').format(_selectedDate); // e.g., "Thu, Sep 25"
 
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
-        backgroundColor: kPrimaryColorColor,
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          "${widget.cityName} Cinemas",
+          // "${widget.cityName} Cinemas near you",
+          "Cinemas",
           style: TextStyle(
               color: Colors.white,
               fontWeight: FontWeight.bold,
@@ -97,7 +98,7 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
 
                       return Card(
                         color: const Color.fromARGB(255, 36, 36, 36),
-                        shadowColor: Colors.white,
+                        shadowColor: const Color.fromARGB(255, 66, 40, 40),
                         margin: const EdgeInsets.symmetric(
                             horizontal: 12, vertical: 8),
                         shape: RoundedRectangleBorder(
@@ -112,7 +113,8 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
                               Row(
                                 children: [
                                   const Icon(Icons.location_on,
-                                      color: Colors.red, size: 22),
+                                      color: Color.fromARGB(255, 139, 0, 0),
+                                      size: 22),
                                   const SizedBox(width: 6),
                                   Expanded(
                                     child: Text(
@@ -141,46 +143,51 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
                               const SizedBox(height: 10),
 
                               // Timings row
-                              Wrap(
-                                spacing: 10,
-                                runSpacing: 8,
-                                children: showTimings.map((time) {
-                                  return ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: const Color.fromARGB(
-                                          255, 190, 188, 188),
-                                      foregroundColor:
-                                          const Color.fromARGB(255, 15, 13, 13),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      // PASSING the selected date and day to SeatSelectionScreen
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => SeatSelectionScreen(
-                                            movieId: widget.movieId,
-                                            // New format: "Movie Title - Cinema, City (Day, Date - Time)"
-                                            bookingDetailsTitle:
-                                                "${widget.movieTitle} - $cinemaNameAndLocation ($selectedDayAndDate - $time)",
-                                            movieTitle: widget.movieTitle,
-                                            cinemaName:
-                                                cinema['name'] ?? 'Cinema',
-                                            cinemaLocation:
-                                                cinema['location'] ??
-                                                    widget.cityName,
-                                            dateTime:
-                                                "$selectedDayAndDate - $time",
-                                            castList: widget.castList,
-                                          ),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 17.0),
+                                child: Wrap(
+                                  spacing: 10,
+                                  runSpacing: 8,
+                                  children: showTimings.map((time) {
+                                    return ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 190, 188, 188),
+                                        foregroundColor: const Color.fromARGB(
+                                            255, 15, 13, 13),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
-                                      );
-                                    },
-                                    child: Text(time),
-                                  );
-                                }).toList(),
+                                      ),
+                                      onPressed: () {
+                                        // PASSING the selected date and day to SeatSelectionScreen
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => SeatSelectionScreen(
+                                              movieId: widget.movieId,
+                                              // New format: "Movie Title - Cinema, City (Day, Date - Time)"
+                                              bookingDetailsTitle:
+                                                  "${widget.movieTitle} - $cinemaNameAndLocation ($selectedDayAndDate - $time)",
+                                              movieTitle: widget.movieTitle,
+                                              cinemaName:
+                                                  cinema['name'] ?? 'Cinema',
+                                              cinemaLocation:
+                                                  cinema['location'] ??
+                                                      widget.cityName,
+                                              dateTime:
+                                                  "$selectedDayAndDate - $time",
+                                              castList: widget.castList,
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      child: Text(time),
+                                    );
+                                  }).toList(),
+                                ),
                               ),
                             ],
                           ),

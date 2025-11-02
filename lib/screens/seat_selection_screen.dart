@@ -19,6 +19,7 @@ int _getPriceByRowIndex(int absoluteRowIndex) {
   if (absoluteRowIndex >= 8 && absoluteRowIndex <= 9) return _pricePrime;
   return 0;
 }
+
 // --- GENERAL COMMENTS BASED ON SEAT SECTIONS ---
 final Map<String, String> generalSeatComments = {
   'front':
@@ -37,7 +38,6 @@ final Map<String, String> seatSpecificComments = {
   'H10': 'Near the aisle — good for quick exits.',
   'J3': 'Top row, minimal disturbance and best privacy.',
 };
-
 
 class SeatSelectionScreen extends StatefulWidget {
   final int movieId;
@@ -83,9 +83,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       _totalPrice = total;
     });
   }
-
-  
-
 
   // 💡 FIX: Updated parsing logic to handle "Cinema Name, City Name (Day, Date - Time)"
   Map<String, String> _parseBookingDetails() {
@@ -195,6 +192,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     _nextRowLabelIndex = 0;
@@ -240,286 +238,294 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
             ),
           ],
         ),
-        backgroundColor: kPrimaryColor, // Assuming kPrimaryColor is defined
+        backgroundColor: Colors.black, // Assuming kPrimaryColor is defined
         foregroundColor: const Color.fromARGB(255, 254, 254, 254),
         elevation: 1,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              // Show Time Banner - Now displays full date and time
-              Container(
-                width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                color: Colors.red[50],
-                child: Center(
-                  child: Text(
-                    // FIX: showTime now contains Day and Date
-                    'Show Time: $showTime', // Output: "Show Time: Thu, Sep 25 - 10:00 AM"
-                    style: const TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.red,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // Show Time Banner - Now displays full date and time
+                Container(
+                  width: double.infinity,
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  color: const Color.fromARGB(255, 65, 2, 2),
+                  child: Center(
+                    child: Text(
+                      // FIX: showTime now contains Day and Date
+                      'Show Time: $showTime', // Output: "Show Time: Thu, Sep 25 - 10:00 AM"
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        color: Color.fromARGB(255, 255, 255, 255),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 15),
-              const Text(
+                const SizedBox(height: 15),
+                const Text(
 // ... (rest of the build function remains the same)
 // ...
-                "Screen This Way",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
-              SizedBox(
-                width: double.infinity,
-                height: 100,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/theatre_screen_image.png',
-                      fit: BoxFit.cover,
-                      width: 400,
-                    ),
+                  "Screen This Way",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  height: 100,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      Image.asset(
+                        'assets/images/theatre_screen_image.png',
+                        fit: BoxFit.cover,
+                        width: 400,
+                      ),
+                    ],
+                  ),
+                ),
+
+                _buildSectionTitle('CLASSIC', _priceClassic),
+                const SizedBox(height: 5),
+
+                /// Section 1-A (Rows A, B, C, D)
+                ...buildSectionAndUpdate(
+                  rows: 4,
+                  cols: 10,
+                  seatStates: [
+                    [
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.sold,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
                   ],
                 ),
-              ),
 
-              _buildSectionTitle('CLASSIC', _priceClassic),
-              const SizedBox(height: 5),
+                const SizedBox(height: 18),
 
-              /// Section 1-A (Rows A, B, C, D)
-              ...buildSectionAndUpdate(
-                rows: 4,
-                cols: 10,
-                seatStates: [
-                  [
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected
+                /// Section 1-B (Rows E, F, G, H) - Part of CLASSIC
+                ...buildSectionAndUpdate(
+                  rows: 4,
+                  cols: 10,
+                  seatStates: [
+                    [
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.sold,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
                   ],
-                  [
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected
-                  ],
-                  [
-                    SeatState.sold,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected
-                  ],
-                  [
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected
-                  ],
-                ],
-              ),
+                ),
 
-              const SizedBox(height: 18),
+                const SizedBox(height: 18),
 
-              /// Section 1-B (Rows E, F, G, H) - Part of CLASSIC
-              ...buildSectionAndUpdate(
-                rows: 4,
-                cols: 10,
-                seatStates: [
-                  [
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected
+                _buildSectionTitle('PRIME', _pricePrime),
+                const SizedBox(height: 10),
+
+                /// Section 2 (Rows I, J)
+                ...buildSectionAndUpdate(
+                  rows: 2,
+                  cols: 10,
+                  seatStates: [
+                    [
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected
+                    ],
+                    [
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.sold,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.unselected,
+                      SeatState.disabled,
+                      SeatState.unselected
+                    ],
                   ],
-                  [
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected
-                  ],
-                  [
-                    SeatState.sold,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected
-                  ],
-                  [
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected
-                  ],
-                ],
-              ),
+                ),
 
-              const SizedBox(height: 18),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 5.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          legendItem('Disabled',
+                              'assets/images/svg_disabled_bus_seat.svg'),
+                          legendItem(
+                              'Sold', 'assets/images/svg_sold_bus_seat.svg'),
+                          legendItem('Available',
+                              'assets/images/svg_unselected_bus_seat.svg'),
+                          legendItem('Selected',
+                              'assets/images/svg_selected_bus_seats.svg'),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
 
-              _buildSectionTitle('PRIME', _pricePrime),
-              const SizedBox(height: 10),
+                      Text(
+                        'Selected Seats: ${selectedSeats.isEmpty ? "None" : selectedSeats.map((s) => s.toSeatString(_getRowLabel)).join(" , ")}',
+                        style: const TextStyle(
+                            fontSize: 14, color: Colors.white70),
+                      ),
+                      const SizedBox(height: 20),
 
-              /// Section 2 (Rows I, J)
-              ...buildSectionAndUpdate(
-                rows: 2,
-                cols: 10,
-                seatStates: [
-                  [
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected
-                  ],
-                  [
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.sold,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.unselected,
-                    SeatState.disabled,
-                    SeatState.unselected
-                  ],
-                ],
-              ),
+                      // --- BUTTON DYNAMICALLY SHOWS PRICE ---
 
-    const SizedBox(height: 20),
-    Padding(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 30.0, vertical: 5.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              legendItem('Disabled', 'assets/images/svg_disabled_bus_seat.svg'),
-              legendItem('Sold', 'assets/images/svg_sold_bus_seat.svg'),
-              legendItem('Available', 'assets/images/svg_unselected_bus_seat.svg'),
-              legendItem('Selected', 'assets/images/svg_selected_bus_seats.svg'),
-            ],
-          ),
-          const SizedBox(height: 10),
+                      ElevatedButton(
+                        onPressed: (_totalPrice > 0 && !_isProcessing)
+                            ? _handleBooking
+                            : null, // Call the handler
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color.fromARGB(255, 65, 2, 2),
+                          disabledBackgroundColor: Colors.grey,
+                          // shadowColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 117, vertical: 15),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: _isProcessing
+                            ? const SizedBox(
+                                // Show a spinner when processing
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 3,
+                                ),
+                              )
+                            : Text(
+                                // Show regular text otherwise
+                                _totalPrice > 0
+                                    ? 'Pay Rs. $_totalPrice'
+                                    : 'Select Seats',
+                                style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16),
+                              ),
+                      ),
 
-          Text(
-            'Selected Seats: ${selectedSeats.isEmpty ? "None" : selectedSeats.map((s) => s.toSeatString(_getRowLabel)).join(" , ")}',
-            style: const TextStyle(fontSize: 14, color: Colors.white70),
-          ),
-          const SizedBox(height: 10),
-
-          // --- BUTTON DYNAMICALLY SHOWS PRICE ---
-
-          ElevatedButton(
-            onPressed: (_totalPrice > 0 && !_isProcessing)
-                ? _handleBooking
-                : null, // Call the handler
-            style: ElevatedButton.styleFrom(
-              backgroundColor: kPrimaryColor,
-              disabledBackgroundColor: Colors.grey,
-              shadowColor: Colors.white,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: _isProcessing
-                ? const SizedBox(
-                    // Show a spinner when processing
-                    width: 24,
-                    height: 24,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 3,
-                    ),
-                  )
-                : Text(
-                    // Show regular text otherwise
-                    _totalPrice > 0
-                        ? 'Proceed to Pay Rs. $_totalPrice'
-                        : 'Select Seats to Proceed',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16),
+                      const SizedBox(height: 25),
+                    ],
                   ),
-          ),
-
-          const SizedBox(height: 25),
-        ],
-      ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),),
+      ),
     );
   }
-
 
 // --- DETERMINE SEAT SECTION ---
   String _getSeatSection(String seatLabel) {
@@ -540,9 +546,9 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     final seatSection = _getSeatSection(seatLabel);
     final generalComment =
         generalSeatComments[seatSection] ?? 'General seating info unavailable.';
-    final seatComment =
-        seatSpecificComments[seatLabel] ?? generalComment; // fallback to general
- 
+    final seatComment = seatSpecificComments[seatLabel] ??
+        generalComment; // fallback to general
+
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -550,7 +556,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
         return SeatPreviewModal(
           seatLabel: seatLabel,
           seatComment: seatComment,
-          
+
           // 👆 keep your seat view images named like A1.jpg, B3.jpg, etc.
           onSelectSeat: () {
             Navigator.pop(ctx); // close modal
@@ -598,31 +604,33 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               child: SeatLayoutWidget(
                 onSeatStateChanged: (localRowI, colI, seatState) {
                   final seatPrice = _getPriceByRowIndex(absoluteRowIndex);
-  final seatLabel = '${_getRowLabel(absoluteRowIndex)}${colI + 1}';
-  final seatNumber = SeatNumber(
-    rowI: absoluteRowIndex,
-    colI: colI,
-    price: seatPrice,
-  );              if (seatState == SeatState.selected) {
-    _showSeatPreviewModal(
-      context,
-      seatLabel,
-      seatPrice,
-      () {
-        setState(() {
-          selectedSeats.add(seatNumber);
-          _calculateTotalPrice();
-        });
-      },
-    );
-  } else {
-    // ❌ Don't open modal when deselecting — just remove the seat
-    setState(() {
-      selectedSeats.remove(seatNumber);
-      _calculateTotalPrice();
-    });
-  }
-},
+                  final seatLabel =
+                      '${_getRowLabel(absoluteRowIndex)}${colI + 1}';
+                  final seatNumber = SeatNumber(
+                    rowI: absoluteRowIndex,
+                    colI: colI,
+                    price: seatPrice,
+                  );
+                  if (seatState == SeatState.selected) {
+                    _showSeatPreviewModal(
+                      context,
+                      seatLabel,
+                      seatPrice,
+                      () {
+                        setState(() {
+                          selectedSeats.add(seatNumber);
+                          _calculateTotalPrice();
+                        });
+                      },
+                    );
+                  } else {
+                    // ❌ Don't open modal when deselecting — just remove the seat
+                    setState(() {
+                      selectedSeats.remove(seatNumber);
+                      _calculateTotalPrice();
+                    });
+                  }
+                },
                 stateModel: SeatLayoutStateModel(
                   currentSeatsState: [seatStates[rowIndex]],
                   pathDisabledSeat: 'assets/images/svg_disabled_bus_seat.svg',

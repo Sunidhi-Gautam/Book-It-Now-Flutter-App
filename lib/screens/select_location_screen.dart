@@ -105,13 +105,13 @@ class SelectLocationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: kPrimaryColor,
+        backgroundColor: const Color(0xFF0F0E0E),
         elevation: 0,
         iconTheme: const IconThemeData(
           color: Colors.white,
         ),
         title: Text(
-          "Select Location",
+          "Location",
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.bold,
@@ -120,138 +120,144 @@ class SelectLocationScreen extends StatelessWidget {
         ),
       ),
       backgroundColor: const Color.fromARGB(255, 15, 14, 14),
-      body: Center(
-          child: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: GridView.builder(
-          itemCount: cities.length,
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
-            crossAxisSpacing: 16,
-            mainAxisSpacing: 16,
-            childAspectRatio: 1.0, // Ensures tiles are square
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 0, 0, 0),
+              Color.fromARGB(255, 49, 1, 1),
+            ],
           ),
-          itemBuilder: (context, index) {
-            final city = cities[index];
-            final cityName = city['name'] as String;
-            final imagePath = city['image'] as String;
+        ),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: GridView.builder(
+              itemCount: cities.length,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.0,
+              ),
+              itemBuilder: (context, index) {
+                final city = cities[index];
+                final cityName = city['name'] as String;
+                final imagePath = city['image'] as String;
 
-            return GestureDetector(
-              onTap: () async {
-                // Show loading while fetching cinemas
-                showDialog(
-                  context: context,
-                  barrierDismissible: false,
-                  builder: (_) => Center(
-                    child: LoadingAnimationWidget.waveDots(
-                      color: kPrimaryColor,
-                      size: 50,
-                    ),
-                  ),
-                );
+                return GestureDetector(
+                  onTap: () async {
+                    showDialog(
+                      context: context,
+                      barrierDismissible: false,
+                      builder: (_) => Center(
+                        child: LoadingAnimationWidget.waveDots(
+                          color: kPrimaryColor,
+                          size: 50,
+                        ),
+                      ),
+                    );
 
-                final cinemas = await fetchCinemas(
-                  city['lat'],
-                  city['lng'],
-                  city['name'],
-                );
-                Navigator.pop(context); // close loading dialog
+                    final cinemas = await fetchCinemas(
+                      city['lat'],
+                      city['lng'],
+                      city['name'],
+                    );
 
-                // Pass movieId and movieTitle to CinemaListScreen
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CinemaListScreen(
-                      cityName: city['name'],
-                      cinemas: cinemas,
-                      movieId: movieId,
-                      movieTitle: movieTitle,
-                      castList: castList,
+                    Navigator.pop(context);
+
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => CinemaListScreen(
+                          cityName: city['name'],
+                          cinemas: cinemas,
+                          movieId: movieId,
+                          movieTitle: movieTitle,
+                          castList: castList,
+                        ),
+                      ),
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 5,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                      ),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Image.asset(
+                            imagePath,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                Container(
+                              color: Colors.grey.shade300,
+                              child: Center(
+                                child: Icon(
+                                  Icons.location_city,
+                                  size: 40,
+                                  color: kPrimaryColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.7),
+                                ],
+                                stops: const [0.5, 1.0],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 10,
+                            left: 10,
+                            right: 10,
+                            child: Text(
+                              cityName,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                                shadows: [
+                                  Shadow(
+                                    blurRadius: 4.0,
+                                    color: Colors.black,
+                                    offset: Offset(1.0, 1.0),
+                                  ),
+                                ],
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 );
               },
-              child: ClipRRect(
-                // Clip the tile to give it rounded corners
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      // Optional: Add shadow for depth
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        spreadRadius: 1,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3),
-                      ),
-                    ],
-                  ),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      // 1. City Image
-                      Image.asset(
-                        imagePath,
-                        fit: BoxFit
-                            .cover, // Ensures the image covers the tile area
-                        // Fallback in case the image asset is missing
-                        errorBuilder: (context, error, stackTrace) => Container(
-                          color: Colors.grey.shade300,
-                          child: Center(
-                            child: Icon(Icons.location_city,
-                                size: 40, color: kPrimaryColor),
-                          ),
-                        ),
-                      ),
-
-                      // 2. Gradient Overlay for text contrast (Bottom Fade)
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black.withOpacity(0.7),
-                            ],
-                            stops: const [0.5, 1.0],
-                          ),
-                        ),
-                      ),
-
-                      // 3. City Name Text
-                      Positioned(
-                        bottom: 10,
-                        left: 10,
-                        right: 10,
-                        child: Text(
-                          cityName,
-                          style: const TextStyle(
-                            color: Colors
-                                .white, // White text over the dark overlay
-                            fontSize: 22,
-                            fontWeight: FontWeight.w900,
-                            shadows: [
-                              Shadow(
-                                blurRadius: 4.0,
-                                color: Colors.black,
-                                offset: Offset(1.0, 1.0),
-                              ),
-                            ],
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
+            ),
+          ),
         ),
-      )),
+      ),
     );
   }
 }

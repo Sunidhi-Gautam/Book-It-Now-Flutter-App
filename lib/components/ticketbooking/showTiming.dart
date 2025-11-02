@@ -63,13 +63,15 @@ class _ShowTimingSelectorState extends State<ShowTimingSelector> {
 
   @override
   Widget build(BuildContext context) {
-  // Note: movieData and priceRange must be defined in constants.dart
+    // Note: movieData and priceRange must be defined in constants.dart
 
     final movieIndexData = movieData[widget.movieIndex % movieData.length];
-    
+
     return Column(
       children: [
-        const SizedBox(height: 10,),
+        const SizedBox(
+          height: 10,
+        ),
         SizedBox(
           height: 80,
           child: ListView.builder(
@@ -90,11 +92,14 @@ class _ShowTimingSelectorState extends State<ShowTimingSelector> {
                   padding: const EdgeInsets.symmetric(vertical: 5.0),
                   margin: const EdgeInsets.symmetric(horizontal: 5.0),
                   decoration: BoxDecoration(
-                    color: _selectedDateIndex == index ? kPrimaryColor : const Color.fromARGB(93, 255, 255, 255),
+                    color: _selectedDateIndex == index
+                        ? kPrimaryColor
+                        : const Color.fromARGB(93, 255, 255, 255),
                     borderRadius: BorderRadius.circular(8.0),
                     boxShadow: [
                       BoxShadow(
-                        color: const Color.fromARGB(255, 240, 234, 234).withOpacity(0.2),
+                        color: const Color.fromARGB(255, 240, 234, 234)
+                            .withOpacity(0.2),
                         blurRadius: 4,
                         offset: const Offset(0, 2),
                       ),
@@ -106,21 +111,28 @@ class _ShowTimingSelectorState extends State<ShowTimingSelector> {
                       Text(
                         _formatDay(date),
                         style: TextStyle(
-                            color: _selectedDateIndex == index ? Colors.white : const Color.fromARGB(255, 13, 12, 12),
+                            color: _selectedDateIndex == index
+                                ? Colors.white
+                                : const Color.fromARGB(255, 13, 12, 12),
                             fontSize: 14),
                       ),
                       Text(
                         _formatDate(date),
                         style: TextStyle(
-                            color: _selectedDateIndex == index ? Colors.white : const Color.fromARGB(255, 19, 19, 19),
-                            fontFamily: primaryFont, // Replace with primaryFont variable
+                            color: _selectedDateIndex == index
+                                ? Colors.white
+                                : const Color.fromARGB(255, 19, 19, 19),
+                            fontFamily:
+                                primaryFont, // Replace with primaryFont variable
                             fontSize: 20,
                             fontWeight: FontWeight.bold),
                       ),
                       Text(
                         _formatMonth(date),
                         style: TextStyle(
-                            color: _selectedDateIndex == index ? Colors.white : const Color.fromARGB(255, 22, 14, 14),
+                            color: _selectedDateIndex == index
+                                ? Colors.white
+                                : const Color.fromARGB(255, 22, 14, 14),
                             fontSize: 14),
                       ),
                     ],
@@ -130,25 +142,30 @@ class _ShowTimingSelectorState extends State<ShowTimingSelector> {
             },
           ),
         ),
-        
         Padding(
-          padding: const EdgeInsets.symmetric(vertical : 15, horizontal: 8),
+          padding:
+              const EdgeInsets.only(top: 20, bottom: 15, right: 8, left: 8),
           child: Row(
             children: [
               const Text(
                 "Languages: ",
-                style: TextStyle(color: Color.fromARGB(255, 243, 239, 239), fontSize: 14), // Replace with primaryFont
+                style: TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 14), // Replace with primaryFont
               ),
               Text(
                 movieIndexData['language']!,
-                style: const TextStyle(color: Color.fromARGB(255, 253, 250, 250), fontSize: 14), // Replace with primaryFont
+                style: const TextStyle(
+                    color: Color.fromARGB(255, 255, 255, 255),
+                    fontSize: 14), // Replace with primaryFont
               ),
-              
             ],
           ),
         ),
-        const Divider(),
-      
+        const Divider(
+          color: Color.fromARGB(255, 142, 142, 142),
+          thickness: 1,
+        ),
       ],
     );
   }
