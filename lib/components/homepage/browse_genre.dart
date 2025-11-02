@@ -12,7 +12,7 @@ class BrowseByGenre extends StatelessWidget {
       children: [
         // Section title
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+          padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
           child: Text(
             "Browse by Genre 🔍",
             style: TextStyle(
@@ -23,7 +23,7 @@ class BrowseByGenre extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
 
         // Horizontal list of genres inside decorated container
         Container(

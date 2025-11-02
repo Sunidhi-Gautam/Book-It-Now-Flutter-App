@@ -1,7 +1,7 @@
 // lib/screens/credits_page.dart
 
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart'; 
+import 'package:iconsax/iconsax.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/credits_manager.dart';
@@ -90,110 +90,139 @@ class _CreditsPageState extends State<CreditsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
-        title: const Text('My Credits'),
-        backgroundColor: const Color.fromARGB(255, 96, 4, 4),
+        title: const Text(
+          'My Credits',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 22,
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
+        centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // --- 1. Credit Balance Card ---
-              _buildCreditBalanceCard(CreditsManager.getCreditsStream()),
-              
-              const SizedBox(height: 16),
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // --- 1. Credit Balance Card ---
+            _buildCreditBalanceCard(CreditsManager.getCreditsStream()),
 
-              // --- 2. Wallet Balance Row ---
-              _buildWalletBalanceRow(WalletManager.getBalanceStream()),
-              
-              const SizedBox(height: 32),
+            const SizedBox(height: 20),
 
-              // --- 3. Instructions ---
-              Text(
-                "How to Earn Credits",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: primaryFont,
-                ),
-              ),
-              const SizedBox(height: 16),
-              _buildRuleCard(
-                icon: Iconsax.edit,
-                text: "Earn 100 credits per review",
-              ),
-              const SizedBox(height: 12),
-              _buildRuleCard(
-                icon: Iconsax.ticket_star,
-                text: "Earn 10 credits per ticket",
-              ),
-              
-              const SizedBox(height: 32),
+            // --- 2. Wallet Balance Row ---
+            _buildWalletBalanceRow(WalletManager.getBalanceStream()),
 
-              // --- 4. Conversion Button ---
-              Text(
-                "Redeem Your Credits",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  fontFamily: primaryFont,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                "$creditsToConvert Credits = ₹${moneyToReceive.toStringAsFixed(0)}",
-                style: TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                  fontFamily: secondaryFonts,
-                ),
-              ),
-              const SizedBox(height: 20),
-              
-              StreamBuilder<int>(
-                stream: CreditsManager.getCreditsStream(),
-                builder: (context, snapshot) {
-                  final currentCredits = snapshot.data ?? 0;
-                  final bool canConvert = currentCredits >= creditsToConvert;
+            const SizedBox(height: 32),
 
-                  return SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: canConvert ? kPrimaryColor : Colors.grey[700],
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      onPressed: (canConvert && !_isConverting)
-                          ? _convertCredits
-                          : null,
-                      child: _isConverting
-                          ? const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child:
-                                  CircularProgressIndicator(color: Colors.white))
-                          : Text(
-                              'Redeem $creditsToConvert Credits',
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                color: canConvert ? Colors.white : Colors.white54,
-                              ),
-                            ),
+            // --- 3. Instructions ---
+            Text(
+              "How to Earn Credits ?",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                fontFamily: primaryFont,
+              ),
+            ),
+            const SizedBox(height: 16),
+            _buildRuleCard(
+              icon: Iconsax.edit,
+              text: "Earn 100 credits per review you post.",
+            ),
+            const SizedBox(height: 12),
+            _buildRuleCard(
+              icon: Iconsax.ticket_star,
+              text: "For every 500 credits, you can redeem ₹100.",
+            ),
+            const SizedBox(height: 32),
+
+            // --- 4. Conversion Button Section ---
+            // Text(
+            //   "Redeem Your Credits",
+            //   style: TextStyle(
+            //     color: Colors.white,
+            //     fontSize: 22,
+            //     fontWeight: FontWeight.bold,
+            //     fontFamily: primaryFont,
+            //   ),
+            // ),
+            // const SizedBox(height: 10),
+            // Text(
+            //   "$creditsToConvert Credits = ₹${moneyToReceive.toStringAsFixed(0)}",
+            //   style: const TextStyle(
+            //     color: Colors.white70,
+            //     fontSize: 16,
+            //   ),
+            // ),
+            // const SizedBox(height: 20),
+
+            StreamBuilder<int>(
+              stream: CreditsManager.getCreditsStream(),
+              builder: (context, snapshot) {
+                final currentCredits = snapshot.data ?? 0;
+                final bool canConvert = currentCredits >= creditsToConvert;
+
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: canConvert
+                          ? [kPrimaryColor, const Color(0xFFD32F2F)]
+                          : [Colors.grey.shade700, Colors.grey.shade600],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
-                  );
-                },
-              ),
-            ],
-          ),
+                    borderRadius: BorderRadius.circular(16),
+                    boxShadow: canConvert
+                        ? [
+                            BoxShadow(
+                              color: kPrimaryColor.withOpacity(0.5),
+                              blurRadius: 15,
+                              offset: const Offset(0, 4),
+                            ),
+                          ]
+                        : [],
+                  ),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                      shadowColor: Colors.transparent,
+                      padding: const EdgeInsets.symmetric(vertical: 18),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                    ),
+                    onPressed:
+                        (canConvert && !_isConverting) ? _convertCredits : null,
+                    child: _isConverting
+                        ? const SizedBox(
+                            width: 26,
+                            height: 26,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                            ),
+                          )
+                        : Text(
+                            'Redeem $creditsToConvert Credits',
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );
@@ -205,10 +234,10 @@ class _CreditsPageState extends State<CreditsPage> {
       width: double.infinity,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        gradient: LinearGradient(
+        gradient: const LinearGradient(
           colors: [
-            const Color.fromARGB(255, 139, 0, 0), // Darker Red
-            kPrimaryColor, // Your main app red
+            Color.fromARGB(255, 146, 28, 28),
+            Color.fromARGB(255, 69, 5, 5)
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -216,9 +245,9 @@ class _CreditsPageState extends State<CreditsPage> {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: kPrimaryColor.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 5),
+            color: kPrimaryColor.withOpacity(0.5),
+            blurRadius: 20,
+            offset: const Offset(0, 6),
           ),
         ],
       ),
@@ -226,9 +255,9 @@ class _CreditsPageState extends State<CreditsPage> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Your Credits",
+            "Total Credits :",
             style: TextStyle(
-              color: Colors.white.withOpacity(0.8),
+              color: Colors.white.withOpacity(0.9),
               fontSize: 16,
               fontWeight: FontWeight.w600,
             ),
@@ -242,11 +271,10 @@ class _CreditsPageState extends State<CreditsPage> {
               }
               final credits = snapshot.data ?? 0;
               return Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  
-                  const Icon(Icons.monetization_on, color: Colors.white, size: 40),
-                 
-                  const SizedBox(width: 10),
+                  const Icon(Iconsax.coin, color: Colors.amberAccent, size: 38),
+                  const SizedBox(width: 12),
                   Text(
                     credits.toString(),
                     style: const TextStyle(
@@ -264,16 +292,31 @@ class _CreditsPageState extends State<CreditsPage> {
     );
   }
 
-  // --- Simple Wallet Balance Row Widget ---
+  // --- Wallet Balance Card Widget ---
   Widget _buildWalletBalanceRow(Stream<double> stream) {
-    return Card(
-      color: Colors.white.withOpacity(0.1),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.1)),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.05),
+            Colors.white.withOpacity(0.02),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
       child: ListTile(
-        leading: Icon(Iconsax.wallet_3, color: Colors.green[400], size: 28),
+        leading:
+            const Icon(Iconsax.wallet_3, color: Colors.greenAccent, size: 30),
         title: const Text(
           "Wallet Balance",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16,
+          ),
         ),
         trailing: StreamBuilder<double>(
           stream: stream,
@@ -296,18 +339,32 @@ class _CreditsPageState extends State<CreditsPage> {
     );
   }
 
-  // --- Styled Rule Card Widget ---
+  // --- Rule Card Widget ---
   Widget _buildRuleCard({required IconData icon, required String text}) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(12),
+        gradient: LinearGradient(
+          colors: [
+            Colors.white.withOpacity(0.08),
+            Colors.white.withOpacity(0.03),
+          ],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.white.withOpacity(0.15)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white70, size: 24),
+          Icon(icon, color: const Color.fromARGB(255, 229, 218, 18), size: 26),
           const SizedBox(width: 16),
           Expanded(
             child: Text(

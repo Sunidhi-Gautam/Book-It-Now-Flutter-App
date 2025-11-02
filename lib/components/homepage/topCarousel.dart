@@ -7,7 +7,6 @@ import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
 
-
 class TopCarouselSection extends StatefulWidget {
   const TopCarouselSection({super.key});
 
@@ -28,7 +27,7 @@ class _TopCarouselSectionState extends State<TopCarouselSection> {
 
   void fetchTrendingMovies() async {
     try {
-      final response = await apiService.fetchTrendingMovies(); 
+      final response = await apiService.fetchTrendingMovies();
       setState(() {
         trendingMovies = response;
         isLoading = false;
@@ -47,24 +46,25 @@ class _TopCarouselSectionState extends State<TopCarouselSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 10.0),
+          padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
           child: Text(
             "Trending This Month 🔥",
             style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              fontFamily: secondaryFonts,
-              color: Colors.white
-            ),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                fontFamily: secondaryFonts,
+                color: Colors.white),
           ),
         ),
         if (isLoading)
-           SizedBox(
+          SizedBox(
             height: 220,
-            child: Center(child: LoadingAnimationWidget.waveDots(
-              color: const Color.fromARGB(158, 255, 255, 255),
-              size: 50, // Adjust size if needed
-            ),),
+            child: Center(
+              child: LoadingAnimationWidget.waveDots(
+                color: const Color.fromARGB(158, 255, 255, 255),
+                size: 50, // Adjust size if needed
+              ),
+            ),
           )
         else if (trendingMovies.isEmpty)
           const SizedBox(
@@ -73,7 +73,7 @@ class _TopCarouselSectionState extends State<TopCarouselSection> {
           )
         else
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            padding: const EdgeInsets.only(top: 10, left: 10, right: 10),
             child: FlutterCarousel(
               items: trendingMovies.map((movie) {
                 final posterUrl = movie.posterPath.isNotEmpty
@@ -98,14 +98,16 @@ class _TopCarouselSectionState extends State<TopCarouselSection> {
                           bottom: 8,
                           right: 8,
                           child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
                               color: Colors.black.withOpacity(0.7),
                               borderRadius: BorderRadius.circular(6),
                             ),
                             child: Row(
                               children: [
-                                const Icon(Icons.star, color: Colors.yellow, size: 16),
+                                const Icon(Icons.star,
+                                    color: Colors.yellow, size: 16),
                                 const SizedBox(width: 4),
                                 Text(
                                   movie.rating.toStringAsFixed(1),

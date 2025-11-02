@@ -26,7 +26,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
     return SizedBox(
       height: 320, // slightly taller for long names
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+        padding: const EdgeInsets.only(top: 30, left: 10, right: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -38,7 +38,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                   fontFamily: secondaryFonts,
                   color: Colors.white),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 20),
             Expanded(
               child: FutureBuilder<List<Movie>>(
                 future: upcomingMovies,

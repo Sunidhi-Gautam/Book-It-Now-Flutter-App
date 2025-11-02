@@ -62,7 +62,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
             child: Container(
               margin: const EdgeInsets.all(8),
               child: const Icon(Iconsax.menu_1,
-                  color: Color.fromARGB(255, 238, 118, 118), size: 28),
+                  color: Color.fromARGB(255, 255, 255, 255), size: 28),
             ),
           ),
         ),
@@ -87,7 +87,7 @@ class _HomePageScreenState extends State<HomePageScreen> {
                       Text(
                         _selectedLocation,
                         style: TextStyle(
-                          color: const Color.fromARGB(255, 248, 179, 174),
+                          color: const Color.fromARGB(255, 252, 235, 235),
                           fontFamily: secondaryFonts,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
@@ -141,7 +141,12 @@ class LocationDialog extends StatelessWidget {
     final locations = ['Mumbai', 'Delhi', 'Chennai', 'Kolkata'];
 
     return AlertDialog(
-      title: const Text('Select Location'),
+      backgroundColor:
+          const Color(0xFF1E1E1E), // 🔹 Dark premium background color
+      title: const Text(
+        'Select Location',
+        style: TextStyle(color: Colors.white),
+      ),
       content: SizedBox(
         width: double.maxFinite,
         child: ListView.builder(
@@ -150,8 +155,14 @@ class LocationDialog extends StatelessWidget {
           itemBuilder: (context, index) {
             final loc = locations[index];
             return ListTile(
-              title: Text(loc),
-              trailing: loc == currentLocation ? const Icon(Icons.check) : null,
+              title: Text(
+                loc,
+                style: const TextStyle(color: Colors.white70),
+              ),
+              trailing: loc == currentLocation
+                  ? const Icon(Icons.check,
+                      color: Color.fromARGB(255, 255, 255, 255))
+                  : null,
               onTap: () => Navigator.pop(context, loc),
             );
           },
@@ -245,7 +256,8 @@ class AppDrawer extends StatelessWidget {
                 builder: (context, snapshot) {
                   final credits = snapshot.data ?? 0;
                   return ListTile(
-                    leading: Icon(Iconsax.coin_1, color: Colors.yellow[600]),
+                    leading: const Icon(Iconsax.coin_1,
+                        color: Color.fromARGB(255, 202, 181, 43)),
                     title: Text(
                       'My Credits',
                       style: TextStyle(
@@ -274,7 +286,7 @@ class AppDrawer extends StatelessWidget {
               const Divider(color: Colors.white),
               ListTile(
                 leading: const Icon(Iconsax.wallet_add_1,
-                    color: Color.fromARGB(255, 166, 243, 172)),
+                    color: Color.fromARGB(255, 48, 158, 57)),
                 title: Text(
                   'Add Money to Wallet',
                   style:
@@ -289,7 +301,7 @@ class AppDrawer extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Iconsax.ticket,
-                    color: Color.fromARGB(255, 243, 172, 166)),
+                    color: Color.fromARGB(255, 17, 78, 163)),
                 title: Text(
                   'My Bookings',
                   style:
@@ -310,7 +322,7 @@ class AppDrawer extends StatelessWidget {
               ),
               ListTile(
                 leading: const Icon(Iconsax.logout,
-                    color: Color.fromARGB(255, 243, 172, 166)),
+                    color: Color.fromARGB(255, 161, 26, 14)),
                 title: Text(
                   'Logout',
                   style:

@@ -31,7 +31,7 @@ class _NewReleasesState extends State<NewReleases> {
       width: widthSize,
       height: 320,
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -55,7 +55,7 @@ class _NewReleasesState extends State<NewReleases> {
                   child: Text(
                     "View All",
                     style: TextStyle(
-                        color: const Color.fromARGB(255, 241, 185, 181),
+                        color: const Color.fromARGB(255, 255, 255, 255),
                         fontSize: 15,
                         fontFamily: subtitleFonts),
                   ),
