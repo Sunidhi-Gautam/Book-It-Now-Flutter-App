@@ -103,126 +103,125 @@ class _CreditsPageState extends State<CreditsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        centerTitle: true,
+        // centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // --- 1. Credit Balance Card ---
-            _buildCreditBalanceCard(CreditsManager.getCreditsStream()),
+      body: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints.expand(),
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromARGB(255, 0, 0, 0),
+              Color.fromARGB(255, 49, 1, 1),
+            ],
+          ),
+        ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // --- 1. Credit Balance Card ---
+              _buildCreditBalanceCard(CreditsManager.getCreditsStream()),
 
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // --- 2. Wallet Balance Row ---
-            _buildWalletBalanceRow(WalletManager.getBalanceStream()),
+              // --- 2. Wallet Balance Row ---
+              _buildWalletBalanceRow(WalletManager.getBalanceStream()),
 
-            const SizedBox(height: 32),
+              const SizedBox(height: 32),
 
-            // --- 3. Instructions ---
-            Text(
-              "How to Earn Credits ?",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-                fontFamily: primaryFont,
+              // --- 3. Instructions ---
+              Text(
+                "How to Earn Credits ?",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: primaryFont,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            _buildRuleCard(
-              icon: Iconsax.edit,
-              text: "Earn 100 credits per review you post.",
-            ),
-            const SizedBox(height: 12),
-            _buildRuleCard(
-              icon: Iconsax.ticket_star,
-              text: "For every 500 credits, you can redeem ₹100.",
-            ),
-            const SizedBox(height: 32),
+              const SizedBox(height: 16),
+              _buildRuleCard(
+                icon: Iconsax.edit,
+                text: "Earn 100 credits per review you post.",
+              ),
+              const SizedBox(height: 12),
+              _buildRuleCard(
+                icon: Iconsax.ticket_star,
+                text: "For every 500 credits, you can redeem ₹100.",
+              ),
+              const SizedBox(height: 32),
 
-            // --- 4. Conversion Button Section ---
-            // Text(
-            //   "Redeem Your Credits",
-            //   style: TextStyle(
-            //     color: Colors.white,
-            //     fontSize: 22,
-            //     fontWeight: FontWeight.bold,
-            //     fontFamily: primaryFont,
-            //   ),
-            // ),
-            // const SizedBox(height: 10),
-            // Text(
-            //   "$creditsToConvert Credits = ₹${moneyToReceive.toStringAsFixed(0)}",
-            //   style: const TextStyle(
-            //     color: Colors.white70,
-            //     fontSize: 16,
-            //   ),
-            // ),
-            // const SizedBox(height: 20),
+              // --- 4. Conversion Button Section ---
+              StreamBuilder<int>(
+                stream: CreditsManager.getCreditsStream(),
+                builder: (context, snapshot) {
+                  final currentCredits = snapshot.data ?? 0;
+                  final bool canConvert = currentCredits >= creditsToConvert;
 
-            StreamBuilder<int>(
-              stream: CreditsManager.getCreditsStream(),
-              builder: (context, snapshot) {
-                final currentCredits = snapshot.data ?? 0;
-                final bool canConvert = currentCredits >= creditsToConvert;
-
-                return AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: canConvert
-                          ? [kPrimaryColor, const Color(0xFFD32F2F)]
-                          : [Colors.grey.shade700, Colors.grey.shade600],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    ),
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: canConvert
-                        ? [
-                            BoxShadow(
-                              color: kPrimaryColor.withOpacity(0.5),
-                              blurRadius: 15,
-                              offset: const Offset(0, 4),
-                            ),
-                          ]
-                        : [],
-                  ),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.transparent,
-                      shadowColor: Colors.transparent,
-                      padding: const EdgeInsets.symmetric(vertical: 18),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(16),
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: canConvert
+                            ? [
+                                const Color.fromARGB(255, 74, 2, 2),
+                                const Color.fromARGB(255, 74, 2, 2),
+                              ]
+                            : [Colors.grey.shade700, Colors.grey.shade600],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
                       ),
+                      borderRadius: BorderRadius.circular(16),
+                      boxShadow: canConvert
+                          ? [
+                              // BoxShadow(
+                              //   color: kPrimaryColor.withOpacity(0.5),
+                              //   blurRadius: 15,
+                              //   offset: const Offset(0, 4),
+                              // ),
+                            ]
+                          : [],
                     ),
-                    onPressed:
-                        (canConvert && !_isConverting) ? _convertCredits : null,
-                    child: _isConverting
-                        ? const SizedBox(
-                            width: 26,
-                            height: 26,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                      ),
+                      onPressed: (canConvert && !_isConverting)
+                          ? _convertCredits
+                          : null,
+                      child: _isConverting
+                          ? const SizedBox(
+                              width: 26,
+                              height: 26,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Text(
+                              'Redeem $creditsToConvert Credits',
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
                             ),
-                          )
-                        : Text(
-                            'Redeem $creditsToConvert Credits',
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                  ),
-                );
-              },
-            ),
-          ],
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -129,16 +129,17 @@ class _TicketPageState extends State<TicketPage> {
       ),
       body: Center(
         child: posterUrl == null
-            ? const CircularProgressIndicator(color: Colors.redAccent)
+            ? const CircularProgressIndicator(
+                color: Color.fromARGB(255, 255, 254, 254))
             : Padding(
                 padding: const EdgeInsets.all(16.0),
                 child: Container(
                   decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: const Color.fromARGB(255, 232, 231, 231),
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: const [
                       BoxShadow(
-                        color: Color.fromARGB(255, 252, 252, 252),
+                        color: Color.fromARGB(255, 109, 4, 4),
                         blurRadius: 8,
                         spreadRadius: 8,
                       ),

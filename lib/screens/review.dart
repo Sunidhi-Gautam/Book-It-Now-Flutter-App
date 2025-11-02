@@ -568,13 +568,15 @@ class _ReviewPageState extends State<ReviewPage> {
           width: size.width * 0.8,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-              color: const Color.fromARGB(221, 77, 76, 76),
+              color: const Color.fromARGB(221, 0, 0, 0),
               borderRadius: BorderRadius.circular(20)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.emoji_events,
-                  color: Color.fromARGB(255, 255, 217, 0), size: 60),
+              // const Icon(Icons.emoji_events,
+              const Icon(Iconsax.coin,
+                  size: 48, color: Color.fromARGB(255, 202, 181, 43)),
+              // color: Color.fromARGB(255, 255, 217, 0), size: 60),
               const SizedBox(height: 10),
               const Text("Yay! Review Submitted!",
                   style: TextStyle(color: Colors.white, fontSize: 20)),
@@ -587,7 +589,12 @@ class _ReviewPageState extends State<ReviewPage> {
                   setState(() => _showPopup = false);
                   Navigator.pop(context, true);
                 },
-                child: const Text("Close"),
+                child: const Text(
+                  "Close",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),

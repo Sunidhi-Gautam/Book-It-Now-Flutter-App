@@ -36,7 +36,7 @@ class MovieDetailScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
-                height: 40,
+                height: 50,
                 child: Center(
                     child: CircularProgressIndicator(
                   color: Color.fromARGB(255, 15, 14, 14),
@@ -49,7 +49,8 @@ class MovieDetailScreen extends StatelessWidget {
             final movie = snapshot.data!;
             return Container(
               color: Colors.transparent, // ✅ removes unwanted background
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              padding: const EdgeInsets.only(
+                  right: 20, left: 20, bottom: 40, top: 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 65, 2, 2),
