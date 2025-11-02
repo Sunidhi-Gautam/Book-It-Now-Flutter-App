@@ -374,7 +374,7 @@ class _ReviewPageState extends State<ReviewPage> {
                             return Colors
                                 .grey[700]!; // visibly gray when disabled
                           }
-                          return const Color.fromARGB(255, 139, 0, 0)
+                          return const Color.fromARGB(255, 65, 2, 2)
                               .withOpacity(0.8); // normal color
                         },
                       ),

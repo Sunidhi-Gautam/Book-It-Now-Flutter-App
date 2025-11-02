@@ -119,7 +119,7 @@ class _TicketPageState extends State<TicketPage> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 100, 0, 0),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         // elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
@@ -138,9 +138,9 @@ class _TicketPageState extends State<TicketPage> {
                     borderRadius: BorderRadius.circular(24),
                     boxShadow: const [
                       BoxShadow(
-                        color: Colors.redAccent,
+                        color: Color.fromARGB(255, 252, 252, 252),
                         blurRadius: 8,
-                        spreadRadius: 2,
+                        spreadRadius: 8,
                       ),
                     ],
                   ),
@@ -296,10 +296,10 @@ class _TicketPageState extends State<TicketPage> {
 
       // Bottom Button → Save to Firestore
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.only(bottom: 30.0, right: 15, left: 15),
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            backgroundColor: const Color.fromARGB(255, 139, 0, 0),
+            backgroundColor: const Color.fromARGB(255, 65, 2, 2),
             foregroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),

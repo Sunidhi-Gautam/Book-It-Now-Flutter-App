@@ -372,7 +372,7 @@ class BookingDetailsSheet extends StatelessWidget {
                             return Colors.grey; // color when disabled
                           }
                           return const Color.fromARGB(
-                              255, 139, 0, 0); // normal color
+                              255, 65, 2, 2); // normal color
                         },
                       ),
                       padding: MaterialStateProperty.all(
