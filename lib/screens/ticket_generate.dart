@@ -121,11 +121,14 @@ class _TicketPageState extends State<TicketPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         // elevation: 0,
-        iconTheme: const IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
         title: const Text(
           "Your Ticket",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              color: Color.fromARGB(255, 255, 255, 255),
+              fontWeight: FontWeight.bold),
         ),
+        centerTitle: true,
       ),
       body: Center(
         child: posterUrl == null

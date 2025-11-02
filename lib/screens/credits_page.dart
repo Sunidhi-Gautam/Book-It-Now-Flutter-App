@@ -62,8 +62,7 @@ class _CreditsPageState extends State<CreditsPage> {
         });
       });
 
-      _showSuccess(
-          'Success! $creditsToConvert credits converted to ₹$moneyToReceive.');
+      _showSuccess('Successfully added ₹$moneyToReceive to your wallet.');
     } catch (e) {
       _showError(e.toString());
     } finally {
