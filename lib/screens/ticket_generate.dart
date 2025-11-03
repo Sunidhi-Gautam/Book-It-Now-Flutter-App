@@ -121,12 +121,16 @@ class _TicketPageState extends State<TicketPage> {
       appBar: AppBar(
         backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         // elevation: 0,
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Color.fromARGB(255, 0, 0, 0)),
-        title: const Text(
-          "Your Ticket",
-          style: TextStyle(
-              color: Color.fromARGB(255, 255, 255, 255),
-              fontWeight: FontWeight.bold),
+        title: const Padding(
+          padding: EdgeInsets.only(top: 30), // 👈 pushes text a bit lower
+          child: Text(
+            "🎞️ Your Golden Ticket 🎞️",
+            style: TextStyle(
+                color: Color.fromARGB(255, 255, 255, 255),
+                fontWeight: FontWeight.bold),
+          ),
         ),
         centerTitle: true,
       ),

@@ -31,7 +31,7 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
         title: Text(
           widget.genreName,
@@ -40,7 +40,7 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
               fontWeight: FontWeight.bold,
               fontFamily: secondaryFonts),
         ),
-        backgroundColor: kPrimaryColor,
+        backgroundColor: const Color.fromARGB(252, 0, 0, 0),
         iconTheme: const IconThemeData(
           color: Color.fromARGB(
               253, 239, 225, 225), // change the back button color

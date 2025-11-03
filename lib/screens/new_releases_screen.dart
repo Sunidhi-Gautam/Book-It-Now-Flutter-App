@@ -24,7 +24,7 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 15, 14, 14),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0),
       appBar: AppBar(
         title: Text(
           "New Releases",
@@ -33,7 +33,7 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
               fontWeight: FontWeight.bold,
               fontFamily: secondaryFonts),
         ),
-        backgroundColor: kPrimaryColor,
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: FutureBuilder<List<Movie>>(

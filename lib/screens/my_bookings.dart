@@ -23,12 +23,14 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
+        automaticallyImplyLeading: false,
         iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
-          "My Bookings",
+          " All Set for Movie Mayhem!",
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
         ),
+        // centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.home, color: Colors.white, size: 28),
@@ -243,63 +245,6 @@ class BookingDetailsSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 18),
-
-            // Review Button Logic
-            // SizedBox(
-            //   width: double.infinity,
-            //   child: ElevatedButton(
-            //     style: ButtonStyle(
-            //       backgroundColor: MaterialStateProperty.resolveWith<Color>(
-            //         (states) {
-            //           if (states.contains(MaterialState.disabled)) {
-            //             return Colors.grey; // color when disabled
-            //           }
-            //           return const Color.fromARGB(
-            //               255, 139, 0, 0); // normal color
-            //         },
-            //       ),
-            //       padding: MaterialStateProperty.all(
-            //           const EdgeInsets.symmetric(vertical: 14)),
-            //       shape: MaterialStateProperty.all(
-            //         RoundedRectangleBorder(
-            //           borderRadius: BorderRadius.circular(14),
-            //         ),
-            //       ),
-            //     ),
-            //     // SizedBox(
-            //     onPressed: () async {
-            //       // ignore: unused_local_variable
-            //       final result = await Navigator.push(
-            //         context,
-            //         MaterialPageRoute(
-            //           builder: (context) => ReviewPage(
-            //             bookingId: booking['bookingId'],
-            //           ),
-            //         ),
-            //       );
-            //       if (result == true) {
-            //         final user = FirebaseAuth.instance.currentUser;
-            //         if (user != null) {
-            //           await FirebaseFirestore.instance
-            //               .collection('users')
-            //               .doc(user.uid)
-            //               .collection('bookings')
-            //               .doc(bookingId)
-            //               .update({'reviewed': true});
-            //         }
-            //         Navigator.pop(context);
-            //       }
-            //     },
-            //     child: Text(
-            //       booking['reviewed'] == true ? "Reviewed" : "Review",
-            //       style: const TextStyle(
-            //         fontSize: 16,
-            //         fontWeight: FontWeight.bold,
-            //         color: Colors.white,
-            //       ),
-            //     ),
-            //   ),
-            // ),
 
             // --- Review Button Logic (Enhanced) ---
             SizedBox(
