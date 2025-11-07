@@ -48,8 +48,9 @@ class SeatSelectionScreen extends StatefulWidget {
   final String cinemaLocation;
   final String dateTime;
   final List<String> castList;
+  
 
-  const SeatSelectionScreen({
+  SeatSelectionScreen({
     super.key,
     required this.movieId,
     required this.bookingDetailsTitle,
@@ -58,11 +59,14 @@ class SeatSelectionScreen extends StatefulWidget {
     required this.cinemaLocation,
     required this.dateTime,
     required this.castList,
+ 
   });
 
   @override
   State<SeatSelectionScreen> createState() => _SeatSelectionScreenState();
 }
+
+
 
 class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   Set<SeatNumber> selectedSeats = {};
@@ -450,72 +454,17 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
 
                 const SizedBox(height: 20),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 30.0, vertical: 5.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  padding: const EdgeInsets.only(bottom: 80),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          legendItem('Disabled',
-                              'assets/images/svg_disabled_bus_seat.svg'),
-                          legendItem(
-                              'Sold', 'assets/images/svg_sold_bus_seat.svg'),
-                          legendItem('Available',
-                              'assets/images/svg_unselected_bus_seat.svg'),
-                          legendItem('Selected',
-                              'assets/images/svg_selected_bus_seats.svg'),
-                        ],
-                      ),
-                      const SizedBox(height: 20),
-
-                      Text(
-                        'Selected Seats: ${selectedSeats.isEmpty ? "None" : selectedSeats.map((s) => s.toSeatString(_getRowLabel)).join(" , ")}',
-                        style: const TextStyle(
-                            fontSize: 14, color: Colors.white70),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // --- BUTTON DYNAMICALLY SHOWS PRICE ---
-
-                      ElevatedButton(
-                        onPressed: (_totalPrice > 0 && !_isProcessing)
-                            ? _handleBooking
-                            : null, // Call the handler
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromARGB(255, 65, 2, 2),
-                          disabledBackgroundColor: Colors.grey,
-                          // shadowColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 117, vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        child: _isProcessing
-                            ? const SizedBox(
-                                // Show a spinner when processing
-                                width: 24,
-                                height: 24,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 3,
-                                ),
-                              )
-                            : Text(
-                                // Show regular text otherwise
-                                _totalPrice > 0
-                                    ? 'Pay Rs. $_totalPrice'
-                                    : 'Select Seats',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                              ),
-                      ),
-
-                      const SizedBox(height: 25),
+                      legendItem('Disabled',
+                          'assets/images/svg_disabled_bus_seat.svg'),
+                      legendItem('Sold', 'assets/images/svg_sold_bus_seat.svg'),
+                      legendItem('Available',
+                          'assets/images/svg_unselected_bus_seat.svg'),
+                      legendItem('Selected',
+                          'assets/images/svg_selected_bus_seats.svg'),
                     ],
                   ),
                 ),
@@ -524,6 +473,81 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           ),
         ),
       ),
+
+// 🧠 Add this floating section after your Scaffold body:
+      bottomSheet: selectedSeats.isEmpty
+          ? null
+          : AnimatedContainer(
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeOut,
+              height: 120,
+              decoration: const BoxDecoration(
+                color: Color.fromARGB(255, 19, 19, 19),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(18)),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black54,
+                    blurRadius: 10,
+                    offset: Offset(0, -3),
+                  ),
+                ],
+              ),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Selected',
+                        style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 17,
+                            fontFamily: secondaryFonts),
+                      ),
+                      Text(
+                        '${selectedSeats.length} seat${selectedSeats.length == 1 ? '' : 's'}',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                          fontFamily: secondaryFonts,
+                        ),
+                      ),
+                    ],
+                  ),
+                  ElevatedButton(
+                    onPressed: _isProcessing ? null : _handleBooking,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 120, 10, 10),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 80, vertical: 14),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    child: _isProcessing
+                        ? const SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 3,
+                            ),
+                          )
+                        : Text(
+                            "Pay ₹$_totalPrice",
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                fontFamily: secondaryFonts),
+                          ),
+                  ),
+                ],
+              ),
+            ),
     );
   }
 
@@ -557,7 +581,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           seatLabel: seatLabel,
           seatComment: seatComment,
 
-          // 👆 keep your seat view images named like A1.jpg, B3.jpg, etc.
+          // keep your seat view images named like A1.jpg, B3.jpg, etc.
           onSelectSeat: () {
             Navigator.pop(ctx); // close modal
             onSelect(); // actually select seat
@@ -624,7 +648,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                       },
                     );
                   } else {
-                    // ❌ Don't open modal when deselecting — just remove the seat
+                    // Don't open modal when deselecting — just remove the seat
                     setState(() {
                       selectedSeats.remove(seatNumber);
                       _calculateTotalPrice();
@@ -667,10 +691,10 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SvgPicture.asset(assetPath, width: 17, height: 17),
-        const SizedBox(width: 4),
+        SvgPicture.asset(assetPath, width: 25, height: 25),
+        const SizedBox(width: 8),
         Text(label,
-            style: const TextStyle(fontSize: 13, color: Colors.white70)),
+            style: const TextStyle(fontSize: 15, color: Colors.white70)),
       ],
     );
   }
