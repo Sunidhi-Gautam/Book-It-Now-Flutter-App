@@ -30,7 +30,6 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
           style: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 22),
         ),
-        // centerTitle: true,
         actions: [
           IconButton(
             icon: const Icon(Icons.home, color: Colors.white, size: 28),
@@ -44,7 +43,7 @@ class _MyBookingsPageState extends State<MyBookingsPage> {
         ],
       ),
 
-      // 🔥 Fetch bookings from Firestore
+      // Fetch bookings from Firestore
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('users')
@@ -246,7 +245,7 @@ class BookingDetailsSheet extends StatelessWidget {
             ),
             const SizedBox(height: 18),
 
-            // --- Review Button Logic (Enhanced) ---
+            // --- Review Button Logic ---
             SizedBox(
               width: double.infinity,
               child: Builder(
@@ -259,7 +258,6 @@ class BookingDetailsSheet extends StatelessWidget {
                     showTime = rawTime.toDate();
                   } else if (rawTime is String) {
                     try {
-                      // Example: "Fri, Oct 31 - 1:00 PM"
                       final regex = RegExp(
                           r'([A-Za-z]{3}), ([A-Za-z]{3}) (\d{1,2}) - (\d{1,2}):(\d{2}) ([APMapm]{2})');
                       final match = regex.firstMatch(rawTime);
@@ -314,10 +312,9 @@ class BookingDetailsSheet extends StatelessWidget {
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (states) {
                           if (states.contains(MaterialState.disabled)) {
-                            return Colors.grey; // color when disabled
+                            return Colors.grey;
                           }
-                          return const Color.fromARGB(
-                              255, 65, 2, 2); // normal color
+                          return const Color.fromARGB(255, 65, 2, 2);
                         },
                       ),
                       padding: MaterialStateProperty.all(

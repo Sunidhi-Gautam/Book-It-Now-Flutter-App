@@ -1,5 +1,7 @@
 // cinema_list.dart (UPDATED to StatefulWidget)
 
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../components/ticketbooking/showTiming.dart';
@@ -41,14 +43,12 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
     setState(() {
       _selectedDate = date;
     });
-    // You could also refresh the cinema list here if showtimes were dynamic
   }
 
   @override
   Widget build(BuildContext context) {
     // Determine the formatted date/day string to pass to the next screen
-    final selectedDayAndDate =
-        DateFormat('EEE, MMM dd').format(_selectedDate); // e.g., "Thu, Sep 25"
+    final selectedDayAndDate = DateFormat('EEE, MMM dd').format(_selectedDate);
 
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 0, 0, 0),
@@ -57,7 +57,6 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
-          // "${widget.cityName} Cinemas near you",
           "Cinemas",
           style: TextStyle(
               color: Colors.white,
@@ -71,8 +70,7 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
         children: [
           // 1. SHOW TIMING SELECTOR
           ShowTimingSelector(
-            movieIndex:
-                widget.movieId, // Using movieId as index, adjust if necessary
+            movieIndex: widget.movieId,
             onDateSelected: _handleDateSelected,
           ),
 
@@ -162,13 +160,11 @@ class _CinemaListScreenState extends State<CinemaListScreen> {
                                         ),
                                       ),
                                       onPressed: () {
-                                        // PASSING the selected date and day to SeatSelectionScreen
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
                                             builder: (_) => SeatSelectionScreen(
                                               movieId: widget.movieId,
-                                              // New format: "Movie Title - Cinema, City (Day, Date - Time)"
                                               bookingDetailsTitle:
                                                   "${widget.movieTitle} - $cinemaNameAndLocation ($selectedDayAndDate - $time)",
                                               movieTitle: widget.movieTitle,

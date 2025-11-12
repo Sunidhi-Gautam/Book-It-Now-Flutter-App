@@ -43,7 +43,7 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
             return Center(
               child: LoadingAnimationWidget.waveDots(
                 color: const Color.fromARGB(158, 255, 255, 255),
-                size: 50, // Adjust size if needed
+                size: 50,
               ),
             );
           } else if (snapshot.hasError) {

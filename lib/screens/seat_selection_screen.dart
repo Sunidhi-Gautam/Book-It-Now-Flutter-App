@@ -4,7 +4,6 @@
 import 'package:book_my_seat/book_my_seat.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-// Assuming 'constants.dart' defines kPrimaryColorColor
 import '../components/seatselections/seat_preview_modal.dart';
 import '../models/constants.dart';
 import '../services/booking_service.dart';
@@ -41,16 +40,14 @@ final Map<String, String> seatSpecificComments = {
 
 class SeatSelectionScreen extends StatefulWidget {
   final int movieId;
-  // Expected Format: "Movie Title - Cinema Name, City Name (Day, Date - Time)"
   final String bookingDetailsTitle;
   final String movieTitle;
   final String cinemaName;
   final String cinemaLocation;
   final String dateTime;
   final List<String> castList;
-  
 
-  SeatSelectionScreen({
+  const SeatSelectionScreen({
     super.key,
     required this.movieId,
     required this.bookingDetailsTitle,
@@ -59,20 +56,17 @@ class SeatSelectionScreen extends StatefulWidget {
     required this.cinemaLocation,
     required this.dateTime,
     required this.castList,
- 
   });
 
   @override
   State<SeatSelectionScreen> createState() => _SeatSelectionScreenState();
 }
 
-
-
 class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
   Set<SeatNumber> selectedSeats = {};
   int _nextRowLabelIndex = 0;
   int _totalPrice = 0;
-  bool _isProcessing = false; // for payment processing state
+  bool _isProcessing = false;
 
   String _getRowLabel(int index) {
     return String.fromCharCode(65 + index);
@@ -88,7 +82,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     });
   }
 
-  // 💡 FIX: Updated parsing logic to handle "Cinema Name, City Name (Day, Date - Time)"
   Map<String, String> _parseBookingDetails() {
     final fullTitle = widget.bookingDetailsTitle;
 
@@ -143,14 +136,13 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
         style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 14,
-          color: Color.fromARGB(
-              255, 128, 125, 125), // Using a dark color for contrast
+          color: Color.fromARGB(255, 128, 125, 125),
         ),
       ),
     );
   }
 
-  //bookings
+  // Bookings
 
   Future<void> _handleBooking() async {
     if (selectedSeats.isEmpty) return;
@@ -236,13 +228,13 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
               overflow: TextOverflow.ellipsis,
             ),
             Text(
-              cinemaDetailsSubtitle, // e.g., "INOX, Delhi"
+              cinemaDetailsSubtitle,
               style: const TextStyle(fontSize: 15, color: Colors.white70),
               overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
-        backgroundColor: Colors.black, // Assuming kPrimaryColor is defined
+        backgroundColor: Colors.black,
         foregroundColor: const Color.fromARGB(255, 254, 254, 254),
         elevation: 1,
       ),
@@ -261,7 +253,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
                   color: const Color.fromARGB(255, 65, 2, 2),
                   child: Center(
                     child: Text(
-                      // FIX: showTime now contains Day and Date
+                      // ShowTime now contains Day and Date
                       'Show Time: $showTime', // Output: "Show Time: Thu, Sep 25 - 10:00 AM"
                       style: const TextStyle(
                         fontSize: 15,
@@ -274,8 +266,6 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
 
                 const SizedBox(height: 15),
                 const Text(
-// ... (rest of the build function remains the same)
-// ...
                   "Screen This Way",
                   textAlign: TextAlign.center,
                   style: TextStyle(
@@ -474,7 +464,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
         ),
       ),
 
-// 🧠 Add this floating section after your Scaffold body:
+// Add this floating section after your Scaffold body:
       bottomSheet: selectedSeats.isEmpty
           ? null
           : AnimatedContainer(
@@ -570,8 +560,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     final seatSection = _getSeatSection(seatLabel);
     final generalComment =
         generalSeatComments[seatSection] ?? 'General seating info unavailable.';
-    final seatComment = seatSpecificComments[seatLabel] ??
-        generalComment; // fallback to general
+    final seatComment = seatSpecificComments[seatLabel] ?? generalComment;
 
     showDialog(
       context: context,
@@ -581,7 +570,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
           seatLabel: seatLabel,
           seatComment: seatComment,
 
-          // keep your seat view images named like A1.jpg, B3.jpg, etc.
+          // Keep your seat view images named like A1.jpg, B3.jpg, etc.
           onSelectSeat: () {
             Navigator.pop(ctx); // close modal
             onSelect(); // actually select seat
@@ -594,7 +583,7 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
     );
   }
 
-  /// Reusable function to build the seat section row-by-row with labels (Unchanged)
+  // Reusable function to build the seat section row-by-row with labels (Unchanged)
   List<Widget> buildSeatSection({
     required int startRowIndex,
     required int rows,

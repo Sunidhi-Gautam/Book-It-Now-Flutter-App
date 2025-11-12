@@ -1,3 +1,5 @@
+// ignore_for_file: file_names
+
 import '../../models/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -11,37 +13,58 @@ class RatingBarDetails extends StatefulWidget {
 class _RatingBarDetailsState extends State<RatingBarDetails> {
   @override
   Widget build(BuildContext context) {
-    double width_size= MediaQuery.of(context).size.width;
-    final ratingDetails= movieData[widget.ratingIndex];
-    String ratingAcquired= ratingDetails['rating'].toString();
-    String voteCount= ratingDetails['ratingCount'];
+    double width_size = MediaQuery.of(context).size.width;
+    final ratingDetails = movieData[widget.ratingIndex];
+    String ratingAcquired = ratingDetails['rating'].toString();
+    String voteCount = ratingDetails['ratingCount'];
     return Container(
-      width: width_size-40,
+      width: width_size - 40,
       height: 48,
       decoration: BoxDecoration(
-        color: Colors.grey.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(6)
-
-      ),
+          color: Colors.grey.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(6)),
       child: Row(
         children: [
-          const SizedBox(width: 10,),
-          Icon(Icons.star_rate_rounded, color: kPrimaryColor, size: 30,),
-          const SizedBox(width: 2,),
-          Text("$ratingAcquired/5 ", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: textSubTitle),),
-          Text("($voteCount votes)", style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: 10),),
+          const SizedBox(
+            width: 10,
+          ),
+          Icon(
+            Icons.star_rate_rounded,
+            color: kPrimaryColor,
+            size: 30,
+          ),
+          const SizedBox(
+            width: 2,
+          ),
+          Text(
+            "$ratingAcquired/5 ",
+            style: TextStyle(
+                color: Colors.black,
+                fontFamily: primaryFont,
+                fontSize: textSubTitle),
+          ),
+          Text(
+            "($voteCount votes)",
+            style: TextStyle(
+                color: Colors.black, fontFamily: primaryFont, fontSize: 10),
+          ),
           const Spacer(),
           Container(
             height: 20,
             width: 60,
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: kPrimaryColor)
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: kPrimaryColor)),
+            child: Text(
+              'Rate now',
+              style: TextStyle(
+                  color: kPrimaryColor, fontSize: 10, fontFamily: primaryFont),
             ),
-            child: Text('Rate now', style: TextStyle(color: kPrimaryColor, fontSize: 10, fontFamily: primaryFont),),
           ),
-          const SizedBox(width: 10,),
+          const SizedBox(
+            width: 10,
+          ),
         ],
       ),
     );

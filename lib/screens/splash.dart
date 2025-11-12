@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import '../../models/constants.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-
-
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
 
@@ -14,12 +12,10 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-
   @override
   void initState() {
     super.initState();
 
-    // Navigate to HomePage after 3 seconds
     Timer(const Duration(seconds: 3), () {
       Navigator.pushReplacement(
         context,
@@ -31,14 +27,14 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kPrimaryColor, // splash background color
+      backgroundColor: kPrimaryColor,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             // App Logo
             Image.asset(
-              'assets/images/logo.png', // Replace with your logo
+              'assets/images/logo.png',
               width: 120,
               height: 120,
             ),
@@ -54,10 +50,9 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            // Loading indicator (remove const)
             LoadingAnimationWidget.waveDots(
               color: const Color.fromARGB(158, 255, 255, 255),
-              size: 50, // Adjust size if needed
+              size: 50,
             ),
           ],
         ),

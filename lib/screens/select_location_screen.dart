@@ -1,18 +1,16 @@
 // SelectLocationScreen.dart
-
 // ignore_for_file: curly_braces_in_flow_control_structures, deprecated_member_use
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'dart:convert';
-// Assuming 'constants.dart' defines kPrimaryColor and secondaryFonts
 import '../models/constants.dart';
 import 'cinema_list_screen.dart';
 
 class SelectLocationScreen extends StatelessWidget {
-  final int movieId; // receive movieId from previous screen
-  final String movieTitle; // receive movieTitle from previous screen
+  final int movieId;
+  final String movieTitle;
   final List<String> castList;
 
   const SelectLocationScreen({
@@ -22,31 +20,31 @@ class SelectLocationScreen extends StatelessWidget {
     required this.castList,
   });
 
-  // 💡 UPDATED: Added an 'image' path for each city
+  // Adds an 'image' path for each city
   final List<Map<String, dynamic>> cities = const [
     {
       'name': 'Delhi',
       'lat': 28.6139,
       'lng': 77.2090,
-      'image': 'assets/images/delhi.png' // Ensure this path is correct
+      'image': 'assets/images/delhi.png'
     },
     {
       'name': 'Mumbai',
       'lat': 19.0760,
       'lng': 72.8777,
-      'image': 'assets/images/mumbai.png', // Ensure this path is correct
+      'image': 'assets/images/mumbai.png',
     },
     {
       'name': 'Chennai',
       'lat': 13.0827,
       'lng': 80.2707,
-      'image': 'assets/images/chennai.png' // Ensure this path is correct
+      'image': 'assets/images/chennai.png'
     },
     {
       'name': 'Kolkata',
       'lat': 22.5726,
       'lng': 88.3639,
-      'image': 'assets/images/kolkata.png' // Ensure this path is correct
+      'image': 'assets/images/kolkata.png'
     },
   ];
 
@@ -87,7 +85,7 @@ class SelectLocationScreen extends StatelessWidget {
           if (tags['addr:city'] != null)
             parts.add(tags['addr:city'].toString());
 
-          final location = parts.join(", "); // Combine available parts
+          final location = parts.join(", ");
 
           return {
             'name': tags['name'].toString(),

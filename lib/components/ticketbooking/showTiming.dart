@@ -1,5 +1,7 @@
 // show_timing_selector.dart
 
+// ignore_for_file: depend_on_referenced_packages, file_names
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Add 'intl: ^0.18.1' to your pubspec.yaml if not already there
 import '../../models/constants.dart';

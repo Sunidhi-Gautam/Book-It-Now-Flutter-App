@@ -1,4 +1,3 @@
-
 // ignore_for_file: file_names
 
 import '../../models/constants.dart';
@@ -14,7 +13,7 @@ class MovieSummary extends StatefulWidget {
 class _MovieSummaryState extends State<MovieSummary> {
   @override
   Widget build(BuildContext context) {
-    final summaryDetails= movieData[widget.summaryIndex];
+    final summaryDetails = movieData[widget.summaryIndex];
     return Padding(
       padding: const EdgeInsets.all(20.0),
       child: Column(
@@ -30,11 +29,20 @@ class _MovieSummaryState extends State<MovieSummary> {
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0, right: 5, top: 2, bottom: 2),
-                  child: Text(summaryDetails['screenType'], style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: 10),),
+                  padding: const EdgeInsets.only(
+                      left: 5.0, right: 5, top: 2, bottom: 2),
+                  child: Text(
+                    summaryDetails['screenType'],
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: primaryFont,
+                        fontSize: 10),
+                  ),
                 ),
               ),
-              const SizedBox(width: 8,),
+              const SizedBox(
+                width: 8,
+              ),
               Container(
                 height: 17,
                 decoration: BoxDecoration(
@@ -42,16 +50,35 @@ class _MovieSummaryState extends State<MovieSummary> {
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 5.0, right: 5, top: 2, bottom: 2),
-                  child: Text(summaryDetails['language'],style: TextStyle(color: Colors.black, fontFamily: primaryFont, fontSize: 10),),
+                  padding: const EdgeInsets.only(
+                      left: 5.0, right: 5, top: 2, bottom: 2),
+                  child: Text(
+                    summaryDetails['language'],
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontFamily: primaryFont,
+                        fontSize: 10),
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 15,),
-          Text(summaryDetails['metadata'], style: TextStyle(color: Colors.black, fontSize: 12, fontFamily: subtitleFonts),),
-          const SizedBox(height: 15,),
-          Text(summaryDetails['about'], style: TextStyle(color: Colors.black, fontSize: 12, fontFamily: subtitleFonts),)
+          const SizedBox(
+            height: 15,
+          ),
+          Text(
+            summaryDetails['metadata'],
+            style: TextStyle(
+                color: Colors.black, fontSize: 12, fontFamily: subtitleFonts),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Text(
+            summaryDetails['about'],
+            style: TextStyle(
+                color: Colors.black, fontSize: 12, fontFamily: subtitleFonts),
+          )
         ],
       ),
     );

@@ -61,8 +61,6 @@ class _SignUpPageState extends State<SignUpPage> {
         const SnackBar(content: Text("Account created successfully!")),
       );
 
-      // --- CORRECTED NAVIGATION ---
-      // This is correct. After signing up, replace this page with the home page.
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomePageScreen()),
       );
@@ -188,8 +186,8 @@ class _SignUpPageState extends State<SignUpPage> {
                           color: kGreyColor,
                         ),
                         onPressed: () {
-                          setState(() =>
-                              _isPasswordObscured = !_isPasswordObscured);
+                          setState(
+                              () => _isPasswordObscured = !_isPasswordObscured);
                         },
                       ),
                       filled: true,
@@ -275,8 +273,6 @@ class _SignUpPageState extends State<SignUpPage> {
                           style: TextStyle(color: kGreyColor)),
                       GestureDetector(
                         onTap: () {
-                          // --- CORRECTED NAVIGATION ---
-                          // This will now work correctly because we used push() to get here
                           Navigator.of(context).pop();
                         },
                         child: const Text(

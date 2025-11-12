@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/credits_manager.dart';
 import '../services/wallet_manager.dart';
-import '../models/constants.dart'; // For kPrimaryColor
+import '../models/constants.dart';
 
 class CreditsPage extends StatefulWidget {
   const CreditsPage({super.key});
@@ -102,7 +102,6 @@ class _CreditsPageState extends State<CreditsPage> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
-        // centerTitle: true,
       ),
       body: Container(
         width: double.infinity,
@@ -176,15 +175,7 @@ class _CreditsPageState extends State<CreditsPage> {
                         end: Alignment.bottomRight,
                       ),
                       borderRadius: BorderRadius.circular(16),
-                      boxShadow: canConvert
-                          ? [
-                              // BoxShadow(
-                              //   color: kPrimaryColor.withOpacity(0.5),
-                              //   blurRadius: 15,
-                              //   offset: const Offset(0, 4),
-                              // ),
-                            ]
-                          : [],
+                      boxShadow: canConvert ? [] : [],
                     ),
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(

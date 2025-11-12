@@ -48,13 +48,13 @@ class MovieDetailScreen extends StatelessWidget {
 
             final movie = snapshot.data!;
             return Container(
-              color: Colors.transparent, // ✅ removes unwanted background
+              color: Colors.transparent,
               padding: const EdgeInsets.only(
                   right: 20, left: 20, bottom: 40, top: 20),
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color.fromARGB(255, 65, 2, 2),
-                  elevation: 5, // slight shadow if you want a floating look
+                  elevation: 5,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
@@ -118,14 +118,6 @@ class MovieDetailScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // --- Movie Banner ---
-                    // Image.network(
-                    //   "https://image.tmdb.org/t/p/w500${movie.backdropPath}",
-                    //   height: 200,
-                    //   width: double.infinity,
-                    //   fit: BoxFit.cover,
-                    // ),
-
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(12),
@@ -189,7 +181,7 @@ class MovieDetailScreen extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.white,
-                          height: 1.5, // improves readability
+                          height: 1.5,
                         ),
                       ),
                     ),
@@ -287,7 +279,7 @@ class MovieDetailScreen extends StatelessWidget {
                         itemBuilder: (_, index) {
                           final review = movie.reviews[index];
                           return Card(
-                            color: const Color.fromARGB(255, 30, 29, 29),
+                            color: const Color.fromARGB(255, 0, 0, 0),
                             shadowColor:
                                 const Color.fromARGB(255, 247, 245, 245),
                             margin: const EdgeInsets.symmetric(
@@ -308,8 +300,6 @@ class MovieDetailScreen extends StatelessWidget {
                                   const SizedBox(height: 5),
                                   Text(
                                     review.content,
-                                    // maxLines: 6,
-                                    // overflow: TextOverflow.ellipsis,
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ],

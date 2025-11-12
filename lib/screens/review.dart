@@ -38,8 +38,8 @@ class _ReviewPageState extends State<ReviewPage> {
   bool _showPopup = false;
   bool _isLoading = false;
   bool _isEditEnabled = false;
-  bool _isReviewed = false; // track whether review exists
-  bool _isEditing = false; // user clicked edit icon
+  bool _isReviewed = false;
+  bool _isEditing = false;
 
   String? reviewDocId;
   int? movieId;
@@ -371,11 +371,10 @@ class _ReviewPageState extends State<ReviewPage> {
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
                         (states) {
                           if (states.contains(MaterialState.disabled)) {
-                            return Colors
-                                .grey[700]!; // visibly gray when disabled
+                            return Colors.grey[700]!;
                           }
                           return const Color.fromARGB(255, 65, 2, 2)
-                              .withOpacity(0.8); // normal color
+                              .withOpacity(0.8);
                         },
                       ),
                     ),
@@ -573,10 +572,8 @@ class _ReviewPageState extends State<ReviewPage> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // const Icon(Icons.emoji_events,
               const Icon(Iconsax.coin,
                   size: 48, color: Color.fromARGB(255, 202, 181, 43)),
-              // color: Color.fromARGB(255, 255, 217, 0), size: 60),
               const SizedBox(height: 10),
               const Text("Yay! Review Submitted!",
                   style: TextStyle(color: Colors.white, fontSize: 20)),

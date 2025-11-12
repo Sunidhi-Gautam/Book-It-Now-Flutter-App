@@ -3,7 +3,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../api_services/tmdb_api.dart';
 import '../../models/constants.dart';
 import '../../models/movie_model.dart';
-import '../../screens/movie_detail_screen.dart'; //movie detail screen fetch krne k liye
+import '../../screens/movie_detail_screen.dart';
 
 class UpcomingMovies extends StatefulWidget {
   const UpcomingMovies({super.key});
@@ -47,7 +47,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                     return Center(
                       child: LoadingAnimationWidget.waveDots(
                         color: const Color.fromARGB(158, 255, 255, 255),
-                        size: 50, // Adjust size if needed
+                        size: 50,
                       ),
                     );
                   } else if (snapshot.hasError) {
@@ -60,8 +60,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                   final movies = snapshot.data!;
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding:
-                        const EdgeInsets.only(bottom: 20), // bottom padding
+                    padding: const EdgeInsets.only(bottom: 20),
                     itemCount: movies.length,
                     itemBuilder: (_, index) {
                       final movie = movies[index];
@@ -70,7 +69,6 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            //---------movie detail screen on tap code-----------
                             GestureDetector(
                               onTap: () {
                                 Navigator.push(
@@ -93,7 +91,6 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                                 ),
                               ),
                             ),
-                            //------------new code for on tap to movie detail screen----------------
                             const SizedBox(height: 5),
                             SizedBox(
                               width: 120,
@@ -106,7 +103,7 @@ class _UpcomingMoviesState extends State<UpcomingMovies> {
                                     fontFamily: secondaryFonts,
                                     color: Colors.white),
                                 softWrap: true,
-                                maxLines: 2, // limits to 2 lines
+                                maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),
                             ),

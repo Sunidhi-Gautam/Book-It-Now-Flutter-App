@@ -45,7 +45,6 @@ class _SigninPageState extends State<SigninPage> {
       );
 
       if (mounted) {
-        // This is correct: replace the signin page with home on success
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => const HomePageScreen()),
         );
@@ -220,7 +219,7 @@ class _SigninPageState extends State<SigninPage> {
                           ),
                   ),
                 ),
-                const SizedBox(height: 20), // Added some space for better UI
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -228,8 +227,6 @@ class _SigninPageState extends State<SigninPage> {
                         style: TextStyle(color: kGreyColor)),
                     GestureDetector(
                       onTap: () {
-                        // --- CORRECTED NAVIGATION ---
-                        // Use push so we can come back with pop()
                         Navigator.of(context).push(
                           MaterialPageRoute(
                               builder: (context) => const SignUpPage()),

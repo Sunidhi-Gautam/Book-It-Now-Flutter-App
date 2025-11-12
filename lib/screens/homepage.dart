@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../components/homepage/browse_genre.dart';
 import '../components/homepage/newRelases.dart';
 import '../components/homepage/topCarousel.dart';

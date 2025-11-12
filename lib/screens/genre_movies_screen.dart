@@ -42,8 +42,7 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
         ),
         backgroundColor: const Color.fromARGB(252, 0, 0, 0),
         iconTheme: const IconThemeData(
-          color: Color.fromARGB(
-              253, 239, 225, 225), // change the back button color
+          color: Color.fromARGB(253, 239, 225, 225),
         ),
       ),
       body: FutureBuilder<List<Movie>>(
@@ -53,7 +52,7 @@ class _GenreMoviesScreenState extends State<GenreMoviesScreen> {
             return Center(
               child: LoadingAnimationWidget.waveDots(
                 color: const Color.fromARGB(158, 255, 255, 255),
-                size: 50, // Adjust size if needed
+                size: 50,
               ),
             );
           } else if (snapshot.hasError) {
