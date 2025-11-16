@@ -9,7 +9,7 @@ import '../models/constants.dart';
 import '../services/booking_service.dart';
 import 'ticket_generate.dart';
 
-// --- PRICE CONSTANTS (Unchanged) ---
+// --- PRICE CONSTANTS ---
 const int _priceClassic = 200;
 const int _pricePrime = 350;
 
@@ -141,52 +141,77 @@ class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
       ),
     );
   }
-
-  // Bookings
-
+// --- HANDLE BOOKING PROCESS ---
   Future<void> _handleBooking() async {
     if (selectedSeats.isEmpty) return;
 
+    // 1. Show loading indicator
     setState(() {
-      _isProcessing = true; // Show loading indicator
+      _isProcessing = true;
     });
 
-    // Convert selected seats to a simple list of strings like ["A1", "J5"]
     final seatStrings =
         selectedSeats.map((seat) => seat.toSeatString(_getRowLabel)).toList();
 
-    // Call the booking service
-    // ignore: unused_local_variable
-    bool success = await BookingService.createBooking(
-      movieId: widget.movieId,
-      movieTitle: widget.movieTitle,
-      bookingDetails: widget.bookingDetailsTitle,
-      selectedSeats: seatStrings,
-      totalPrice: _totalPrice,
-    );
+    // 2. using try-catch to handle errors from BookingService
+    try {
+      // Call the booking service
+      bool success = await BookingService.createBooking(
+        movieId: widget.movieId,
+        movieTitle: widget.movieTitle,
+        bookingDetails: widget.bookingDetailsTitle,
+        selectedSeats: seatStrings,
+        totalPrice: _totalPrice,
+      );
 
-    // Hide loading indicator
-    if (mounted) {
       // Check if the widget is still in the tree
-      setState(() {
-        _isProcessing = false;
-      });
-    }
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => TicketPage(
-          movieId: widget.movieId,
-          movieTitle: widget.movieTitle,
-          cinemaName: widget.cinemaName,
-          cinemaLocation: widget.cinemaLocation,
-          showTime: widget.dateTime,
-          selectedSeats: seatStrings,
-          totalPrice: _totalPrice,
-          castList: widget.castList,
+      if (!mounted) return;
+
+      // 3. This 'if' will only run if success is true AND no error was thrown
+      if (success) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TicketPage(
+              movieId: widget.movieId,
+              movieTitle: widget.movieTitle,
+              cinemaName: widget.cinemaName,
+              cinemaLocation: widget.cinemaLocation,
+              showTime: widget.dateTime,
+              selectedSeats: seatStrings,
+              totalPrice: _totalPrice,
+              castList: widget.castList,
+            ),
+          ),
+        );
+      } else {
+        // This case handles when success is false but no exception was thrown
+        
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Booking failed. Please try again.'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } catch (e) {
+      // 4. This block will catch the *real* error from BookingService
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          // Display the actual error message
+          content: Text(e.toString()),
+          backgroundColor: Colors.red,
         ),
-      ),
-    );
+      );
+    } finally {
+      // 5. 'finally' ensures the loading indicator is always hidden
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    }
   }
 
   @override

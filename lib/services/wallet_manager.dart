@@ -2,6 +2,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+//helper class to find the path to users data and manage wallet operations
+//checsks if user is logged in and performs wallet operations like create wallet, add credits and make purchase
+//if no one is logged in, it returns null or false as appropriate
+//if someone is signed in, it uses their uid to access their document in firestore
 class WalletManager {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -11,7 +15,8 @@ class WalletManager {
     if (user == null) return null;
     return _firestore.collection('users').doc(user.uid);
   }
-
+// Creating a wallet for the user upon registration
+// with an initial balance (1000) and credits (500)
   static Future<void> createUserWallet({required String username}) async {
     final user = _auth.currentUser;
     if (user == null) return;
@@ -23,7 +28,7 @@ class WalletManager {
       await docRef.set({
         'email': user.email,
         'username': username,
-        'walletBalance': 1000.0,
+        'walletBalance': 1000.0,  
         'createdAt': FieldValue.serverTimestamp(),
         'credits': 500,
       });
@@ -72,7 +77,7 @@ class WalletManager {
       return false;
     }
   }
-
+//Booking service will call this function to deduct the amount from wallet
   static Future<bool> makePurchase(double amount) async {
     final docRef = _userDocRef;
     if (docRef == null) return false;

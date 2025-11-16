@@ -33,7 +33,9 @@ class _SignUpPageState extends State<SignUpPage> {
     _confirmPasswordController.dispose();
     super.dispose();
   }
-
+// Function to handle user sign up with Firebase Authentication and create wallet
+// using WalletManager
+//includes error handling and loading state management
   Future<void> _signUp() async {
     if (!_formKey.currentState!.validate()) {
       return;

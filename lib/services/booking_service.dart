@@ -28,8 +28,12 @@ class BookingService {
 
       if (paymentSuccessful) {
         // Step 2: If payment is successful, create the booking record
-        await _firestore.collection('bookings').add({
-          'userId': user.uid,
+        await _firestore
+            .collection('users')
+            .doc(user.uid)
+            .collection('bookings')
+            .add({
+          
           'movieId': movieId,
           'movieTitle': movieTitle,
           'bookingDetails': bookingDetails,

@@ -39,7 +39,7 @@ class _SigninPageState extends State<SigninPage> {
     try {
       setState(() => _isLoading = true);
 
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
+      await FirebaseAuth.instance.signInWithEmailAndPassword(  
         email: _emailController.text.trim(),
         password: _passwordController.text.trim(),
       );
