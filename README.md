@@ -63,28 +63,35 @@ Returning users can log in through the sign-in screen using their registered cre
 
 <img src="assets/images/signinscreen.jpg" alt="Signin Screen" width="300"/>
 
-### 3. Side Drawer
+### 3. Home Page
+After logging in, the home page provides a central hub for exploring movies, accessing upcoming bookings, and navigating through the app with an intuitive interface. Users can also browse movies according to Genres. 
+
+<img src="assets/images/homepageone.png" alt="Home Screen" width="300"/>
+
+<img src="assets/images/homepagetwo.png" alt="Home Screen" width="300"/>
+
+### 4. Side Drawer
 The side drawer serves as a convenient navigation panel that displays the user’s wallet balance, total earned credits, upcoming bookings, and a logout option. It allows users to quickly access essential information and manage their account without leaving the home screen. 
 
 <img src="assets/images/sidedrawer.jpg" alt="Side Drawer" width="300"/>
 
-### 4. Movie Details Screen
+### 5. Movie Details Screen
 This screen presents detailed information about each movie, including its synopsis, cast and crew details, trailers, and verified user reviews. Users can evaluate all aspects of a movie before proceeding to select showtimes and book tickets, making informed decisions based on authentic feedback.
 
 <img src="assets/images/moviedetails.jpg" alt="Movie Detail" width="300"/>
 
-### 5. Location Selection Screen
+### 6. Location Selection Screen
 Upon clicking the "Proceed" button, the user is redirected to this screen, where they can choose their preferred location from one of the four metropolitan cities.
 
 <img src="assets/images/locationscreen.jpg" alt="Location Screen" width="300"/>
 
-### 6. Showtime & Theatre Selection
+### 7. Showtime & Theatre Selection
 
 Users can choose their preferred cinema hall and showtime for a movie. The application displays available theatres in the selected city and allows users to filter showtimes according to convenience, before navigating to the seat selection map.
 
 <img src="assets/images/showtime.jpg" alt="Showtime Screen" width="300"/>
 
-### 7. Seat Map & Screen Preview Modal
+### 8. Seat Map & Screen Preview Modal
 The Seat Map Screen shows the selected Movie, Showtime and Theatre. It allows user to select the desired seats. 
 
 <img src="assets/images/seatmap.jpg" alt="Seat Map" width="300"/>
@@ -94,29 +101,31 @@ When selecting a seat, a seat preview modal shows a realistic 2D visualization o
 <img src="assets/images/seatmodal.jpg" alt="Screen Preview" width="300"/>
 
 
-### 8. Ticket Confirmation
+### 9. Ticket Confirmation
 After successfully booking a ticket, users receive a confirmation screen detailing their seat, showtime, and theatre.
 
 <img src="assets/images/ticket.jpg" alt="Ticket" width="300"/>
 
-### 9. My Bookings
+### 10. My Bookings
 All booked tickets are saved in the “My Bookings” section for easy access, allowing users to view their history and submit post-movie reviews once the showtime has passed.
 
 <img src="assets/images/mybooking.jpg" alt="My Bookings Tab" width="300"/>
 
 
-<img src="assets/images/reviewdisabled.png" alt="Review Button Disabled" width="200"/>
+<img src="assets/images/reviewdisabled.png" alt="Review Button Disabled" width="300"/>
 
 
 <img src="assets/images/reviewenabled.jpg" alt="Review Button Enabled" width="300"/>
 
-### 10. Review Page
+### 11. Review Page
 Once the "Review" button is enabled, clicking it directs the user to the review page. This page features 10 thoughtfully designed questions that capture the user’s sentiments effectively. Submitted reviews can be viewed and updated later in the "My Bookings" section.
 
-<img src="assets/images/reviewpageone.png" alt="Review Page" width="300"/>
-<img src="assets/images/reviewpagetwo.png" alt="Review Page" width="300"/>
+<img src="assets/images/reviewpageone.jpg" alt="Review Page" width="300"/>
 
-### 11. Rewards & Credits
+
+<img src="assets/images/reviewpagetwo.jpg" alt="Review Page" width="300"/>
+
+### 12. Rewards & Credits
 Users earn credits for submitting verified reviews, which contribute to their total reward balance. Accumulated credits can be redeemed as dummy wallet money within the app, incentivizing continued engagement and creating a rewarding cycle for active participation.
 
 <img src="assets/images/earnedcredit.jpg" alt="Credit earned" width="300"/>
