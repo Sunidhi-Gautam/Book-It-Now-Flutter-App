@@ -4,8 +4,8 @@ import '../models/movie_detail_model.dart';
 import '../models/movie_model.dart';
 
 class ApiService {
-  final String apiKey = "4bba6688b6ccd7f19cb0988863f028dc"; // Replace with your TMDB key
-  final String baseUrl = "https://api.themoviedb.org/3";
+  final String apiKey = "key"; // Replace with your TMDB key
+  final String baseUrl = "url";
 
   /// Fetch upcoming movies from TMDb (future releases)
   Future<List<Movie>> fetchUpcomingMovies() async {
