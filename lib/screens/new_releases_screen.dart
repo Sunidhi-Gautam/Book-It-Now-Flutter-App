@@ -43,7 +43,7 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
             return Center(
               child: LoadingAnimationWidget.waveDots(
                 color: const Color.fromARGB(158, 255, 255, 255),
-                size: 50,
+                size: 60,
               ),
             );
           } else if (snapshot.hasError) {
@@ -89,10 +89,10 @@ class _NewReleasesScreenState extends State<NewReleasesScreen> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 15),
                     Text(
                       movie.title,
-                      maxLines: 2,
+                      maxLines: 4,
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
                           fontSize: 16,

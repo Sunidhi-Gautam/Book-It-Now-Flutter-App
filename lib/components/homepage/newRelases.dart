@@ -29,7 +29,7 @@ class _NewReleasesState extends State<NewReleases> {
 
     return SizedBox(
       width: widthSize,
-      height: 320,
+      height: 340,
       child: Padding(
         padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
         child: Column(
@@ -120,7 +120,7 @@ class _NewReleasesState extends State<NewReleases> {
                               // Title
                               Text(
                                 movie.title,
-                                maxLines: 2,
+                                maxLines: 4,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     fontSize: 14,
@@ -128,7 +128,7 @@ class _NewReleasesState extends State<NewReleases> {
                                     fontFamily: secondaryFonts,
                                     color: Colors.white),
                               ),
-                              const SizedBox(height: 3),
+                              const SizedBox(height: 6),
                               // Rating
                               Row(
                                 children: [
